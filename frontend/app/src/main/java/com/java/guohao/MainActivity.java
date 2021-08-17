@@ -2,8 +2,6 @@ package com.java.guohao;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
@@ -18,7 +16,7 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     private ViewPager2 mViewPager;
-    private ViewPagerAdapter mViewAdapter;
+    private MainPagerAdapter mViewAdapter;
     private BottomNavigationView mBottomNav;
 
     private final int mIdOfPos[] = { R.id.nav_home, R.id.nav_qa, R.id.nav_discover, R.id.nav_me };
@@ -39,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
         mBottomNav.setOnItemSelectedListener(this);
 
-        mViewAdapter = new ViewPagerAdapter(this);
+        mViewAdapter = new MainPagerAdapter(this);
         mViewPager.setAdapter(mViewAdapter);
         mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
