@@ -3,21 +3,25 @@ from django.http import JsonResponse
 import json
 import requests
 from urllib import parse
+from .models import GUser
+import hashlib
+import uuid
+
 
 # Create your views here.
-
-SESSION = "guohao"
-PASSWORD = "guohao"
 EDUKG_ID = ""
 
 HEADERS = {
     "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
 }
 
-cur_data = {
-    "history": [],
-    "favourite": []
-}
+
+def get_user_by_sess(session: str):
+    db_user = list(GUser.objects.filter(session=session))
+    if db_user:
+        return db_user[0]
+    else:
+        return None
 
 
 def hello(request):
@@ -30,10 +34,14 @@ def login(request):
     post_json = json.loads(request.body)
     user = post_json.get("user", "")
     pw = post_json.get("passwd", "")
-    if user and pw and pw == PASSWORD:
+    db_user = GUser.objects.filter(username=user)
+    db_user = list(db_user)
+    if db_user and db_user[0].password == hashlib.sha1(pw.encode("utf-8")).hexdigest():
+        db_user[0].session = uuid.uuid4()
+        db_user[0].save()
         return JsonResponse({
             "ok": 1,
-            "session": SESSION,
+            "session": db_user[0].session,
             "msg": f"login succeeded, user: {user}, pw: {pw}"
         })
     else:
@@ -50,6 +58,8 @@ def register(request):
     pw = post_json.get("passwd", "")
     data = post_json.get("data", "")
     if user and pw:
+        db_user = GUser(username=user, password=hashlib.sha1(pw.encode("utf-8")).hexdigest(), data=data)
+        db_user.save()
         return JsonResponse({
             "ok": 1,
             "msg": f"register succeeded, user: {user}, pw: {pw}, data: {data}"
@@ -62,14 +72,14 @@ def register(request):
 
 
 def userdata(request):
-    global cur_data
     post_json = json.loads(request.body)
     sess = post_json.get("session", "")
-    data = post_json.get("data", {})
-    if data:
-        cur_data = data
-    if sess == SESSION:
+    data = post_json.get("data", "")
+    db_user = get_user_by_sess(sess)
+    if db_user:
         if data:
+            db_user.data = json.dumps(data)
+            db_user.save()
             return JsonResponse({
                 "ok": 1,
                 "data": json.dumps(data)
@@ -77,7 +87,7 @@ def userdata(request):
         else:
             return JsonResponse({
                 "ok": 1,
-                "data": json.dumps(cur_data)
+                "data": db_user.data
             })
     else:
         return JsonResponse({
@@ -113,8 +123,9 @@ def proc(request):
     sess = post_json.get("session", "")
     url = post_json.get("url", "")
     method = post_json.get("method", "")
-    data = post_json.get("data", {})
-    if sess == SESSION and url and method:
+    data = json.loads(post_json.get("data", ""))
+    db_user = get_user_by_sess(sess)
+    if db_user and url and method:
         json_res = __get_res(url, method, data)
         if json_res.get("code", "-1") == "-1":
             __login()
