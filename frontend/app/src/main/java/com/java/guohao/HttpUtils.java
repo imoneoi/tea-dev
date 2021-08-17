@@ -2,8 +2,6 @@ package com.java.guohao;
 
 import android.os.Handler;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -19,7 +17,9 @@ public class HttpUtils {
             data.put("searchKey", searchKey);
             JSONObject params = new JSONObject();
             params.put("session", session);
+
             params.put("url", "http://open.edukg.cn/opedukg/api/typeOpen/open/instanceList");
+            params.put("method", "GET");
             params.put("data", data);
             Requests.post(GlobVar.PROC_ADDR, params, handler);
         } catch (Exception e) {

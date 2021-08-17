@@ -4,6 +4,7 @@ import android.icu.util.Output;
 import android.os.Message;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -27,11 +28,15 @@ public class Requests {
                     HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
                     conn.setRequestMethod("POST");
                     conn.setRequestProperty("Content-Type", "application/json; utf-8");
+                    conn.setRequestProperty("Connection", "Keep-Alive");
                     conn.setRequestProperty("Accept", "application/json");
                     conn.setDoOutput(true);
-                    byte[] jsonStr = params.toString().getBytes(StandardCharsets.UTF_8);
-                    conn.getOutputStream().write(jsonStr);
                     conn.connect();
+                    byte[] jsonStr = params.toString().getBytes();
+                    Log.i("Requests", params.toString());
+                    conn.getOutputStream().write(jsonStr);
+                    conn.getOutputStream().flush();
+                    conn.getOutputStream().close();
                     String ret = readFromStream(conn.getInputStream());
                     Message msg = new Message();
                     msg.what = GlobVar.SUCCESS;

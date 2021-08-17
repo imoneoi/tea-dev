@@ -6,7 +6,7 @@ public class GlobVar {
     public static final int CONNECTION_TIMEOUT = 5000;
     public static final int SUCCESS = 0;
     public static final int BOTTOM_NAV_LENGTH = 4;
-    public static final String API_ADDR = "http://127.0.0.1:8000/api/";
+    public static final String API_ADDR = "http://47.102.217.32:19741/api/";
     public static final String LOGIN_ADDR = API_ADDR + "login";
     public static final String REGISTER_ADDR = API_ADDR + "register";
     public static final String USERDATA_ADDR = API_ADDR + "userdata";

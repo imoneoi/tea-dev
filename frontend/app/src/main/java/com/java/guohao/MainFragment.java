@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,11 +53,11 @@ public class MainFragment extends Fragment {
 
         mTabBar = view.findViewById(R.id.main_tab);
         mTabBar.setTabTitles(mTitles);
-        mTabBar.setViewPager(new FragmentPagerAdapter() {
+        mTabBar.setViewPager(new FragmentPagerAdapter(getFragmentManager()) {
             @NonNull
             @Override
             public Fragment getItem(int position) {
-                return new SearchFragment(GlobVar.KEYWORD_OF_SUBJECT.get(mTitles[position]));
+                return new SearchFragment(GlobVar.KEYWORD_OF_SUBJECT.get(mTitles[position]), "");
             }
 
             @Override

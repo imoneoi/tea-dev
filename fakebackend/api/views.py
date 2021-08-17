@@ -65,9 +65,9 @@ def userdata(request):
     global cur_data
     post_json = json.loads(request.body)
     sess = post_json.get("session", "")
-    data = post_json.get("data", "")
+    data = post_json.get("data", {})
     if data:
-        cur_data = json.loads(data)
+        cur_data = data
     if sess == SESSION:
         if data:
             return JsonResponse({
@@ -113,7 +113,7 @@ def proc(request):
     sess = post_json.get("session", "")
     url = post_json.get("url", "")
     method = post_json.get("method", "")
-    data = json.loads(post_json.get("data", ""))
+    data = post_json.get("data", {})
     if sess == SESSION and url and method:
         json_res = __get_res(url, method, data)
         if json_res.get("code", "-1") == "-1":
