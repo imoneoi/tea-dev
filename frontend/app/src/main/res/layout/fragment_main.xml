@@ -12,9 +12,44 @@
         app:queryHint="输入内容以搜索"
         app:iconifiedByDefault="false"
         android:layout_height="40dp" />
-    <com.xuexiang.xui.widget.tabbar.EasyIndicator
+    <androidx.constraintlayout.widget.ConstraintLayout
         app:layout_constraintTop_toBottomOf="@id/main_search"
-        android:id="@+id/main_tab"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/main_constraint"
+        >
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/main_tab"
+            app:tabMode="scrollable"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/main_add_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <ImageButton
+            app:layout_constraintRight_toLeftOf="@id/main_remove_btn"
+            app:layout_constraintLeft_toRightOf="@id/main_tab"
+            android:id="@+id/main_add_btn"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:src="@drawable/add"
+            />
+        <ImageButton
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/main_add_btn"
+            android:id="@+id/main_remove_btn"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:src="@drawable/remove"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.viewpager2.widget.ViewPager2
+        android:nestedScrollingEnabled="true"
+        android:id="@+id/main_tab_vp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_constraint"
+        tools:layout_editor_absoluteX="0dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

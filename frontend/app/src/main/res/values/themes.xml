@@ -1,5 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Using XUI -->
-    <style name="Theme.EDUKGfrontend" parent="XUITheme.Phone">
+    <style name="Theme.EDUKGfrontend" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     </style>
 </resources>

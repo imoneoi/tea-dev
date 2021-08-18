@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 public class HttpUtils {
-    private static String session = "guohao"; // hardcode
+    private static String session = "774a7579-1b28-46b5-ab41-a1f543629ce0"; // hardcode
 
     // http://open.edukg.cn/opedukg/api/typeOpen/open/instanceList
     public static void searchEntity(String course, String searchKey, Handler handler) {
@@ -20,7 +20,7 @@ public class HttpUtils {
 
             params.put("url", "http://open.edukg.cn/opedukg/api/typeOpen/open/instanceList");
             params.put("method", "GET");
-            params.put("data", data);
+            params.put("data", data.toString());
             Requests.post(GlobVar.PROC_ADDR, params, handler);
         } catch (Exception e) {
             e.printStackTrace();
