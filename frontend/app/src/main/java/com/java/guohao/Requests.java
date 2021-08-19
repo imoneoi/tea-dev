@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class Requests {
     // only need to use POST here
-    public static void post(String url, JSONObject params, Handler handler) {
+    public static void post(String url, JSONObject params, Handler handler, int what) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -39,7 +39,7 @@ public class Requests {
                     conn.getOutputStream().close();
                     String ret = readFromStream(conn.getInputStream());
                     Message msg = new Message();
-                    msg.what = GlobVar.SUCCESS;
+                    msg.what = what;
                     msg.obj = ret;
                     handler.sendMessage(msg);
                 } catch (Exception e) {
