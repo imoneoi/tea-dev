@@ -78,11 +78,11 @@ def userdata(request):
     db_user = get_user_by_sess(sess)
     if db_user:
         if data:
-            db_user.data = json.dumps(data)
+            db_user.data = data
             db_user.save()
             return JsonResponse({
                 "ok": 1,
-                "data": json.dumps(data)
+                "data": data
             })
         else:
             return JsonResponse({
