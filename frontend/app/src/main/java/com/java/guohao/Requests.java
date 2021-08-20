@@ -61,7 +61,7 @@ public class Requests {
             }
             outStream.close();
             inStream.close();
-            s = outStream.toString();
+            s = outStream.toString("utf8");
         } catch(Exception e) {
             e.printStackTrace();
         }

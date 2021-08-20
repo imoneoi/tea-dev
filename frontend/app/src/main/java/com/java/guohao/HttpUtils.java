@@ -56,14 +56,28 @@ public class HttpUtils {
         SafeHandler mHandler = new SafeHandler(this);
 
         User() {
-            session = "774a7579-1b28-46b5-ab41-a1f543629ce0"; // hardcode
             favourite = new HashMap<>();
             history = new LinkedHashMap<>();
+
+            // logged in
+            session = "774a7579-1b28-46b5-ab41-a1f543629ce0"; // hardcode
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(500);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    getUserData();
+                }
+            }).start();
         }
 
         public void setFavourite(String label, boolean isFavourite) {
-            if (!isFavourite) this.favourite.remove(label);
-            else {
+            if (!isFavourite) {
+                this.favourite.remove(label);
+            } else {
                 this.favourite.put(label, new Timestamp(System.currentTimeMillis()).getTime());
             }
             this.updateUserData();
@@ -84,7 +98,6 @@ public class HttpUtils {
 
         public void decodeData(String data) /* "data" item in user info */ {
             try {
-                Log.i("data", data);
                 JSONObject obj = new JSONObject(data);
                 JSONArray favourite_arr = obj.getJSONArray("favourite");
                 for (int i = 0; i < favourite_arr.length(); ++i) {

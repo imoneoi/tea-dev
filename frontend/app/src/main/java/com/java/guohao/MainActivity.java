@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /* Dirty code to construct user */
+        System.out.println(HttpUtils.user.session);
+
         mPosOfId = new HashMap<>();
         for (int i = 0; i < mIdOfPos.length; ++i) {
             mPosOfId.put(mIdOfPos[i], i);

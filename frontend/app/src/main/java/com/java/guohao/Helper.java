@@ -9,7 +9,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
 public class Helper {
-    public static void ImageViewAnimatedChange(Context c, final ImageView v, final int resId, final int colorId, long duration) {
+    public static void ImageViewAnimatedChange(Context c, final ImageView v, final Integer resId, final Integer colorId, long duration) {
         final Animation anim_out = AnimationUtils.loadAnimation(c, android.R.anim.fade_out);
         final Animation anim_in  = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);
         anim_in.setDuration(duration);
@@ -21,7 +21,9 @@ public class Helper {
             @Override public void onAnimationEnd(Animation animation)
             {
                 v.setImageResource(resId);
-                v.setColorFilter(c.getResources().getColor(colorId));
+                if (colorId != null) {
+                    v.setColorFilter(c.getResources().getColor(colorId));
+                }
                 anim_in.setAnimationListener(new Animation.AnimationListener() {
                     @Override public void onAnimationStart(Animation animation) {}
                     @Override public void onAnimationRepeat(Animation animation) {}

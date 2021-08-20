@@ -1,11 +1,13 @@
 package com.java.guohao;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,10 +43,13 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView mPrimary;
         private final TextView mSecondary;
+        private final ImageView mFavourite;
+
         public ViewHolder(View view) {
             super(view);
             mPrimary = view.findViewById(R.id.two_line_primary_text);
             mSecondary = view.findViewById(R.id.two_line_secondary_text);
+            mFavourite = view.findViewById(R.id.two_line_star);
         }
 
         public TextView getPrimary() {
@@ -53,6 +58,10 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         public TextView getSecondary() {
             return mSecondary;
+        }
+
+        public ImageView getFavourite() {
+            return mFavourite;
         }
     }
 
@@ -101,12 +110,14 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
             public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.two_line_list, parent, false);
                 ViewHolder h = new ViewHolder(view);
+
+                // star animation
                 view.findViewById(R.id.two_line_star).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String label = h.getPrimary().getText().toString();
                         if (HttpUtils.user.isFavourite(label)) {
-                            Helper.ImageViewAnimatedChange(v.getContext(), v.findViewById(R.id.two_line_star), R.drawable.star_border, R.color.black, 100);
+                            Helper.ImageViewAnimatedChange(v.getContext(), v.findViewById(R.id.two_line_star), R.drawable.star_border, R.color.default_grey, 100);
                         } else {
                             Helper.ImageViewAnimatedChange(v.getContext(), v.findViewById(R.id.two_line_star), R.drawable.star, R.color.orange, 100);
                         }
@@ -120,6 +131,17 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
             public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
                 holder.getPrimary().setText(mLocalDataset.get(position).label);
                 holder.getSecondary().setText(mLocalDataset.get(position).category);
+
+                /* favourite */
+                if (HttpUtils.user.isFavourite(mLocalDataset.get(position).label)) {
+                    holder.getFavourite().setImageResource(R.drawable.star);
+                    holder.getFavourite().setColorFilter(getResources().getColor(R.color.orange));
+                } else {
+                    holder.getFavourite().setImageResource(R.drawable.star_border);
+                    holder.getFavourite().setColorFilter(getResources().getColor(R.color.default_grey));
+                }
+
+                /* TODO: history */
             }
 
             @Override
