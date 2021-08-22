@@ -47,7 +47,7 @@
         android:alpha="0.87"
         android:maxLines="1"
         android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="?attr/colorOnSurface"
+        android:textColor="@color/default_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/two_line_star"

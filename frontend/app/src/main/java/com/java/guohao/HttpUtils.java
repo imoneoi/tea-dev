@@ -2,7 +2,6 @@ package com.java.guohao;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -18,7 +17,7 @@ import java.util.Map;
 public class HttpUtils {
 
     static class User {
-        String session;
+        String session = "";
         HashMap<String, Long> favourite; // label and timestamp
         LinkedHashMap<String, Long> history; // label and timestamp
 
@@ -54,6 +53,7 @@ public class HttpUtils {
         }
 
         SafeHandler mHandler = new SafeHandler(this);
+        String mSearchKey = "";
 
         User() {
             favourite = new HashMap<>();
@@ -61,6 +61,8 @@ public class HttpUtils {
 
             // logged in
             session = "774a7579-1b28-46b5-ab41-a1f543629ce0"; // hardcode
+            mSearchKey = Storage.getKey(this.getClass().getSimpleName(), session);
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -171,13 +173,31 @@ public class HttpUtils {
             JSONObject data = new JSONObject();
             data.put("course", course);
             data.put("searchKey", searchKey);
+
             JSONObject params = new JSONObject();
             params.put("session", user.session);
-
             params.put("url", "http://open.edukg.cn/opedukg/api/typeOpen/open/instanceList");
             params.put("method", "GET");
             params.put("data", data.toString());
-            Requests.post(GlobVar.PROC_ADDR, params, handler, GlobVar.SUCCESS);
+            Requests.post(GlobVar.PROC_ADDR, params, handler, GlobVar.SUCCESS_FROM_INTERNET);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // http://open.edukg.cn/opedukg/api/typeOpen/open/infoByInstanceName
+    public static void getEntityInfo(String course, String name, Handler handler) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("course", course);
+            data.put("name", name);
+
+            JSONObject params = new JSONObject();
+            params.put("session", user.session);
+            params.put("url", "http://open.edukg.cn/opedukg/api/typeOpen/open/infoByInstanceName");
+            params.put("method", "GET");
+            params.put("data", data.toString());
+            Requests.post(GlobVar.PROC_ADDR, params, handler, GlobVar.SUCCESS_FROM_INTERNET);
         } catch (Exception e) {
             e.printStackTrace();
         }

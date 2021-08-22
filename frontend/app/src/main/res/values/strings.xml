@@ -2,4 +2,7 @@
     <string name="app_name">EDUKG-frontend</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="entity_info">实体详情</string>
+    <string name="label">label</string>
+    <string name="course">course</string>
 </resources>

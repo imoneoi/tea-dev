@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.java.guohao">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".MyApplication"
@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EDUKGfrontend"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".EntityInfoActivity"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -1,6 +1,6 @@
 package com.java.guohao;
 
-import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,9 +32,11 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            if (msg.what == GlobVar.SUCCESS) {
+            if (msg.what == GlobVar.SUCCESS_FROM_INTERNET) {
                 SearchFragment parent = (SearchFragment)mParent.get();
-                parent.parseData(msg.obj.toString());
+                String data = msg.obj.toString();
+                parent.parseData(data);
+                Storage.save(parent.getContext(), parent.mStorageKey, data);
                 parent.mRefresh.setRefreshing(false);
             }
         }
@@ -78,15 +80,17 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private ArrayList<EntitySearchResult> mLocalDataset;
     private SafeHandler mHandler = new SafeHandler(this);
-    private String mSubject;
+    private String mCourse;
     private String mSearchKeyword;
+    private String mStorageKey;
     private RecyclerView mView;
     private RecyclerView.Adapter<ViewHolder> mAdapter;
     private SwipeRefreshLayout mRefresh;
 
-    public SearchFragment(String subject, String searchKeyword) {
-        mSubject = subject;
+    public SearchFragment(String course, String searchKeyword) {
+        mCourse = course;
         mSearchKeyword = searchKeyword;
+        mStorageKey = Storage.getKey(this.getClass().getSimpleName(), mCourse, mSearchKeyword);
         mLocalDataset = new ArrayList<>();
     }
 
@@ -124,6 +128,16 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         HttpUtils.user.reverseFavourite(label);
                     }
                 });
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), EntityInfoActivity.class);
+                        intent.putExtra(getString(R.string.label), h.getPrimary().getText().toString());
+                        intent.putExtra(getString(R.string.course), SearchFragment.this.mCourse);
+                        startActivity(intent);
+                    }
+                });
                 return h;
             }
 
@@ -150,6 +164,7 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         };
         mView.setAdapter(mAdapter);
+        initData();
         return view;
     }
 
@@ -171,7 +186,17 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
     }
 
+    private void initData() {
+        mRefresh.setRefreshing(true);
+        if (Storage.contains(this.getContext(), mStorageKey)) {
+            parseData(Storage.load(this.getContext(), mStorageKey));
+            mRefresh.setRefreshing(false);
+        } else {
+            onRefresh();
+        }
+    }
+
     public void onRefresh() {
-        HttpUtils.searchEntity(mSubject, mSearchKeyword, mHandler);
+        HttpUtils.searchEntity(mCourse, mSearchKeyword, mHandler);
     }
 }
