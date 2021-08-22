@@ -1,6 +1,9 @@
 package com.java.guohao;
 
+import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,26 +11,33 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class MainFragment extends Fragment {
 
-    private SearchView mSearchView;
+    private MaterialSearchBar mSearchBar;
     private TabLayout mTabBar;
     private ViewPager2 mViewPager;
     private ArrayList<String> mInitialTitles = new ArrayList<>(); // initial titles by local storage or ...
@@ -50,18 +60,13 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        mSearchView = view.findViewById(R.id.main_search);
-        mSearchView.setSubmitButtonEnabled(true);
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchBar = view.findViewById(R.id.main_search);
+        mSearchBar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                Log.i("MainFragment", "Search: " + query); // TODO: search
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+                intent.putExtra(getString(R.string.course), mTabBar.getTabAt(mTabBar.getSelectedTabPosition()).getText());
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
             }
         });
 
@@ -69,7 +74,7 @@ public class MainFragment extends Fragment {
         mPagerAdapter = new FragmentStateAdapter(this) {
             @Override
             public long getItemId(int position) {
-                return Long.valueOf(MainFragment.this.mInitialTitles.get(position).hashCode()); // or removing current will be a huge bug
+                return MainFragment.this.mInitialTitles.get(position).hashCode(); // or removing current will be a huge bug
             }
 
             public Fragment createFragment(int pos) {
@@ -88,6 +93,22 @@ public class MainFragment extends Fragment {
         mViewPager.setAdapter(mPagerAdapter);
 
         mTabBar = view.findViewById(R.id.main_tab);
+        mTabBar.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mSearchBar.setPlaceHolder(" 在 " + tab.getText() + " 学科搜索");
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         loadInitialTitles();
         mMediator = new TabLayoutMediator(mTabBar, mViewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override

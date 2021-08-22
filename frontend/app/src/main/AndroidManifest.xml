@@ -14,6 +14,9 @@
         android:theme="@style/Theme.EDUKGfrontend"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".SearchActivity"
+            android:exported="true" />
+        <activity
             android:name=".EntityInfoActivity"
             android:exported="true" />
         <activity

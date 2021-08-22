@@ -94,11 +94,6 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mLocalDataset = new ArrayList<>();
     }
 
-    public void onCreate(Bundle savedInstanceState, String searchKeyword) {
-        super.onCreate(savedInstanceState);
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
