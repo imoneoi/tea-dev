@@ -6,66 +6,57 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".TabEditDialogFragment">
     <TextView
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="32dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tab_edit_title"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/tab_edit_in_help"
         android:textAppearance="?attr/textAppearanceHeadline6"
-        android:text="编辑" />
+        android:text="@string/tab_edit_title" />
     <TextView
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/tab_edit_title"
-        app:layout_constraintBottom_toTopOf="@id/tab_edit_in_card"
+        app:layout_constraintBottom_toTopOf="@id/tab_edit_in_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tab_edit_in_help"
         android:textAppearance="?attr/textAppearanceCaption"
-        android:text="长按拖动以排序，短暂点击以除去"/>
-    <com.google.android.material.card.MaterialCardView
-        app:layout_constraintTop_toBottomOf="@id/tab_edit_title"
-        app:layout_constraintBottom_toTopOf="@id/tab_edit_out_card"
+        android:text="@string/tab_edit_in_help"/>
+    <androidx.recyclerview.widget.RecyclerView
+        app:layout_constraintTop_toBottomOf="@id/tab_edit_in_help"
+        app:layout_constraintBottom_toTopOf="@id/tab_edit_out_help"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:id="@+id/tab_edit_in_card">
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_margin="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/tab_edit_in_view"/>
-    </com.google.android.material.card.MaterialCardView>
 
     <TextView
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tab_edit_in_card"
-        app:layout_constraintBottom_toTopOf="@id/tab_edit_out_card"
+        app:layout_constraintTop_toBottomOf="@id/tab_edit_in_view"
+        app:layout_constraintBottom_toTopOf="@id/tab_edit_out_view"
         android:id="@+id/tab_edit_out_help"
         android:textAppearance="?attr/textAppearanceCaption"
         android:text="点击以添加" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_margin="16dp"
+    <androidx.recyclerview.widget.RecyclerView
         app:layout_constraintTop_toBottomOf="@id/tab_edit_out_help"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:id="@+id/tab_edit_out_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tab_edit_out_card">
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_margin="8dp"
-            android:id="@+id/tab_edit_out_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </com.google.android.material.card.MaterialCardView>
+        android:layout_height="wrap_content" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,6 +22,8 @@ import com.google.android.material.chip.Chip;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class TabEditDialogFragment extends DialogFragment {
 
@@ -47,9 +49,16 @@ public class TabEditDialogFragment extends DialogFragment {
 
     public class TitleAdapter extends RecyclerView.Adapter<ViewHolder> {
         private ArrayList<String> mLocalDataset;
+        private ArrayList<String> mOppositeDataset;
+        private TitleAdapter mOppositeAdapter;
 
-        public TitleAdapter(ArrayList<String> dataset) {
+        public TitleAdapter(ArrayList<String> dataset, ArrayList<String> oppositeDataset) {
             mLocalDataset = dataset;
+            mOppositeDataset = oppositeDataset;
+        }
+
+        public void setOppositeAdapter(TitleAdapter oppositeAdapter) {
+            mOppositeAdapter = oppositeAdapter;
         }
 
         @NonNull
@@ -64,12 +73,54 @@ public class TabEditDialogFragment extends DialogFragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.getChip().setText(mLocalDataset.get(position));
+            holder.getChip().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Chip c = v.findViewById(R.id.tab_edit_chip);
+                    int x = mLocalDataset.indexOf(c.getText().toString());
+                    mLocalDataset.remove(x);
+                    notifyItemRemoved(x);
+                    mOppositeDataset.add(c.getText().toString());
+                    mOppositeAdapter.notifyItemInserted(mOppositeDataset.size() - 1);
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
             return mLocalDataset.size();
         }
+    }
+
+    public class TitleCallback extends ItemTouchHelper.SimpleCallback {
+        private ArrayList<String> mDataset;
+        private TitleAdapter mAdapter;
+
+        TitleCallback(ArrayList<String> dataset, TitleAdapter adapter) {
+            super(ItemTouchHelper.UP | ItemTouchHelper.RIGHT | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT, 0);
+            mDataset = dataset;
+            mAdapter = adapter;
+        }
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            int from = viewHolder.getBindingAdapterPosition();
+            int to = target.getBindingAdapterPosition();
+            if (from < to) {
+                for (int i = from; i < to; ++i) {
+                    Collections.swap(mDataset, i, i + 1);
+                }
+            } else {
+                for (int i = from; i > to; --i) {
+                    Collections.swap(mDataset, i, i - 1);
+                }
+            }
+            mAdapter.notifyItemMoved(from, to);
+            return true;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) { }
     }
 
 
@@ -89,8 +140,14 @@ public class TabEditDialogFragment extends DialogFragment {
 
         mInView.setLayoutManager(new GridLayoutManager(this.getContext(), 3));
         mOutView.setLayoutManager(new GridLayoutManager(this.getContext(), 3));
-        mInView.setAdapter(new TitleAdapter(mInTitles));
-        mOutView.setAdapter(new TitleAdapter(mOutTitles));
+        TitleAdapter inAdapter = new TitleAdapter(mInTitles, mOutTitles);
+        TitleAdapter outAdapter = new TitleAdapter(mOutTitles, mInTitles);
+        inAdapter.setOppositeAdapter(outAdapter);
+        outAdapter.setOppositeAdapter(inAdapter);
+        mInView.setAdapter(inAdapter);
+        mOutView.setAdapter(outAdapter);
+        (new ItemTouchHelper(new TitleCallback(mInTitles, inAdapter))).attachToRecyclerView(mInView);
+        (new ItemTouchHelper(new TitleCallback(mOutTitles, outAdapter))).attachToRecyclerView(mOutView);
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -113,9 +170,7 @@ public class TabEditDialogFragment extends DialogFragment {
         super.onResume();
         mInTitles.clear();
         mOutTitles.clear();
-        for (int i = 0; i < mParent.getInitialTitles().size(); ++i) {
-            mInTitles.add(mParent.getInitialTitles().get(i));
-        }
+        mInTitles.addAll(mParent.getInitialTitles());
         for (int i = 0; i < GlobVar.SUBJECTS.length; ++i) {
             if (!mParent.getInitialTitles().contains(GlobVar.SUBJECTS[i])) {
                 mOutTitles.add(GlobVar.SUBJECTS[i]);

@@ -22,26 +22,17 @@
             android:id="@+id/main_tab"
             app:tabMode="scrollable"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/main_add_btn"
+            app:layout_constraintRight_toLeftOf="@id/main_edit_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent" />
         <ImageButton
-            app:layout_constraintRight_toLeftOf="@id/main_remove_btn"
-            app:layout_constraintLeft_toRightOf="@id/main_tab"
-            android:id="@+id/main_add_btn"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:src="@drawable/add"
-            />
-        <ImageButton
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/main_add_btn"
-            android:id="@+id/main_remove_btn"
+            app:layout_constraintLeft_toRightOf="@id/main_tab"
+            android:id="@+id/main_edit_btn"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:src="@drawable/remove"
+            android:src="@drawable/edit"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.viewpager2.widget.ViewPager2
