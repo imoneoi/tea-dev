@@ -127,6 +127,9 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        // history
+                        h.getPrimary().setTextColor(getResources().getColor(R.color.default_grey, getActivity().getTheme()));
+
                         Intent intent = new Intent(v.getContext(), EntityInfoActivity.class);
                         intent.putExtra(getString(R.string.label), h.getPrimary().getText().toString());
                         intent.putExtra(getString(R.string.course), SearchFragment.this.mCourse);
@@ -144,13 +147,16 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 /* favourite */
                 if (HttpUtils.user.isFavourite(mLocalDataset.get(position).label)) {
                     holder.getFavourite().setImageResource(R.drawable.star);
-                    holder.getFavourite().setColorFilter(getResources().getColor(R.color.orange));
+                    holder.getFavourite().setColorFilter(getResources().getColor(R.color.orange, getActivity().getTheme()));
                 } else {
                     holder.getFavourite().setImageResource(R.drawable.star_border);
-                    holder.getFavourite().setColorFilter(getResources().getColor(R.color.default_grey));
+                    holder.getFavourite().setColorFilter(getResources().getColor(R.color.default_grey, getActivity().getTheme()));
                 }
 
-                /* TODO: history */
+                /* history */
+                if (HttpUtils.user.isHistory(mLocalDataset.get(position).label)) {
+                    holder.getPrimary().setTextColor(getResources().getColor(R.color.default_grey, getActivity().getTheme()));
+                }
             }
 
             @Override

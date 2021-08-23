@@ -98,6 +98,10 @@ public class HttpUtils {
             this.updateUserData();
         }
 
+        public boolean isHistory(String label) {
+            return this.history.containsKey(label);
+        }
+
         public void decodeData(String data) /* "data" item in user info */ {
             try {
                 JSONObject obj = new JSONObject(data);

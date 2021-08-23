@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -100,14 +101,10 @@ public class MainFragment extends Fragment {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) { }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) { }
         });
         loadInitialTitles();
         mMediator = new TabLayoutMediator(mTabBar, mViewPager, new TabLayoutMediator.TabConfigurationStrategy() {
@@ -140,6 +137,7 @@ public class MainFragment extends Fragment {
         mRemoveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 new MaterialAlertDialogBuilder(
                         MainFragment.this.getActivity(),
                         R.style.MaterialAlertDialog_MaterialComponents)
@@ -152,6 +150,8 @@ public class MainFragment extends Fragment {
                         mPagerAdapter.notifyItemRemoved(which);
                     }
                 }).show();
+                 */
+                new TabEditDialogFragment(MainFragment.this).show(getParentFragmentManager(), null);
             }
         });
 
@@ -163,5 +163,14 @@ public class MainFragment extends Fragment {
         mInitialTitles.add("语文");
         mInitialTitles.add("数学");
         mInitialTitles.add("英语");
+    }
+
+    public ArrayList<String> getInitialTitles() {
+        return mInitialTitles;
+    }
+
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        this.mInitialTitles = ((TabEditDialogFragment) dialog).getInTitles();
+        this.mPagerAdapter.notifyDataSetChanged();
     }
 }

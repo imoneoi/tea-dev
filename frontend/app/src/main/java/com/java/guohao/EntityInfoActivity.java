@@ -168,6 +168,7 @@ public class EntityInfoActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        HttpUtils.user.addHistory(mLabel);
         if (Storage.contains(this, mStorageKey)) {
             parseData(Storage.load(this, mStorageKey));
         } else {
