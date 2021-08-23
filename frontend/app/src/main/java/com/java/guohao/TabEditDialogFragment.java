@@ -3,11 +3,13 @@ package com.java.guohao;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -51,10 +53,12 @@ public class TabEditDialogFragment extends DialogFragment {
         private ArrayList<String> mLocalDataset;
         private ArrayList<String> mOppositeDataset;
         private TitleAdapter mOppositeAdapter;
+        private int mDrawableId;
 
-        public TitleAdapter(ArrayList<String> dataset, ArrayList<String> oppositeDataset) {
+        public TitleAdapter(ArrayList<String> dataset, ArrayList<String> oppositeDataset, int drawableId) {
             mLocalDataset = dataset;
             mOppositeDataset = oppositeDataset;
+            mDrawableId = drawableId;
         }
 
         public void setOppositeAdapter(TitleAdapter oppositeAdapter) {
@@ -67,6 +71,9 @@ public class TabEditDialogFragment extends DialogFragment {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.chip_tab_edit_dialog, parent, false);
             ViewHolder h = new ViewHolder(view);
+
+            Chip c = view.findViewById(R.id.tab_edit_chip);
+            c.setChipIcon(ContextCompat.getDrawable(getContext(), mDrawableId));
             return h;
         }
 
@@ -140,8 +147,8 @@ public class TabEditDialogFragment extends DialogFragment {
 
         mInView.setLayoutManager(new GridLayoutManager(this.getContext(), 3));
         mOutView.setLayoutManager(new GridLayoutManager(this.getContext(), 3));
-        TitleAdapter inAdapter = new TitleAdapter(mInTitles, mOutTitles);
-        TitleAdapter outAdapter = new TitleAdapter(mOutTitles, mInTitles);
+        TitleAdapter inAdapter = new TitleAdapter(mInTitles, mOutTitles, R.drawable.delete);
+        TitleAdapter outAdapter = new TitleAdapter(mOutTitles, mInTitles, R.drawable.add);
         inAdapter.setOppositeAdapter(outAdapter);
         outAdapter.setOppositeAdapter(inAdapter);
         mInView.setAdapter(inAdapter);
