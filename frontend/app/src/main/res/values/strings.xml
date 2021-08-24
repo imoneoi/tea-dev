@@ -14,4 +14,7 @@
     <string name="cancel">取消</string>
     <string name="tab_edit_in_help">拖动以排序，点击以删除</string>
     <string name="tab_edit_title">编辑</string>
+    <string name="search_filter_title">筛选</string>
+    <string name="search_filter_category_title">类型</string>
+    <string name="search_filter_label_title">名称</string>
 </resources>

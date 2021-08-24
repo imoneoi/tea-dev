@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +79,64 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
     }
 
+    public class EntitySearchResultFilter {
+        public ArrayMap<String, Integer> mLabel;
+        public ArrayMap<String, Integer> mCategory;
+
+        public ArrayMap<String, Integer> mLabelSet;
+        public ArrayMap<String, Integer> mCategorySet;
+
+        EntitySearchResultFilter() {
+            mLabel = new ArrayMap<>();
+            mCategory = new ArrayMap<>();
+            mLabelSet = new ArrayMap<>();
+            mCategorySet = new ArrayMap<>();
+        }
+
+        void reset() {
+            mLabel.clear();
+            mCategory.clear();
+            mLabelSet.clear();
+            mCategorySet.clear();
+            for (EntitySearchResult result : mOriginalDataset) {
+                mLabelSet.put(result.label, 1);
+                mCategorySet.put(result.category, 1);
+            }
+        }
+
+        public ArrayList<EntitySearchResult> filter(ArrayList<EntitySearchResult> in) {
+            ArrayList<EntitySearchResult> ret = new ArrayList<>();
+            for (EntitySearchResult result : in) {
+                boolean put = false;
+                if (!mLabel.isEmpty()) {
+                    for (String s : mLabel.keySet()) {
+                        if (result.label.contains(s)) {
+                            put = true;
+                            break;
+                        }
+                    }
+                } else {
+                    put = true;
+                }
+                if (!mCategory.isEmpty()) {
+                    for (String s : mCategory.keySet()) {
+                        if (result.category.contains(s)) {
+                            put = true;
+                            break;
+                        }
+                    }
+                } else {
+                    put = true;
+                }
+                if (put) ret.add(result);
+            }
+            return ret;
+        }
+    }
+
+    private ArrayList<EntitySearchResult> mOriginalDataset;
     private ArrayList<EntitySearchResult> mLocalDataset;
+    private EntitySearchResultFilter mFilter;
     private SafeHandler mHandler = new SafeHandler(this);
     private String mCourse;
     private String mSearchKeyword;
@@ -86,12 +144,20 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private RecyclerView mView;
     private RecyclerView.Adapter<ViewHolder> mAdapter;
     private SwipeRefreshLayout mRefresh;
+    private SearchActivity mParent;
 
     public SearchFragment(String course, String searchKeyword) {
+        this(course, searchKeyword, null);
+    }
+
+    public SearchFragment(String course, String searchKeyword, SearchActivity parent) {
+        mParent = parent;
         mCourse = course;
         mSearchKeyword = searchKeyword;
         mStorageKey = Storage.getKey(this.getClass().getSimpleName(), mCourse, mSearchKeyword);
         mLocalDataset = new ArrayList<>();
+        mOriginalDataset = new ArrayList<>();
+        mFilter = new EntitySearchResultFilter();
     }
 
     @Override
@@ -165,7 +231,9 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         };
         mView.setAdapter(mAdapter);
-        initData();
+        if (!mCourse.equals("")) {
+            initData();
+        }
         return view;
     }
 
@@ -173,21 +241,30 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
         try {
             JSONObject obj = new JSONObject(raw_data);
             JSONArray data = obj.getJSONArray("data");
-            mLocalDataset.clear();
+            mOriginalDataset.clear();
             for (int i = 0; i < data.length(); ++i) {
                 JSONObject single = data.getJSONObject(i);
                 String label = single.getString("label");
                 String category = single.getString("category");
                 String uri = single.getString("uri");
-                mLocalDataset.add(new EntitySearchResult(label, category, uri));
+                mOriginalDataset.add(new EntitySearchResult(label, category, uri));
             }
-            mAdapter.notifyDataSetChanged();
+            mFilter.reset();
+            if (mParent != null) mParent.onSearchFragmentUpdate();
+            filterData();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void initData() {
+    public void setSearchInfoAndInit(String course, String searchKeyword) {
+        mCourse = course;
+        mSearchKeyword = searchKeyword;
+        mStorageKey = Storage.getKey(this.getClass().getSimpleName(), mCourse, mSearchKeyword);
+        initData();
+    }
+
+    public void initData() {
         mRefresh.setRefreshing(true);
         if (Storage.contains(this.getContext(), mStorageKey)) {
             parseData(Storage.load(this.getContext(), mStorageKey));
@@ -199,5 +276,14 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     public void onRefresh() {
         HttpUtils.searchEntity(mCourse, mSearchKeyword, mHandler);
+    }
+
+    public EntitySearchResultFilter getFilter() {
+        return mFilter;
+    }
+
+    public void filterData() {
+        mLocalDataset = mFilter.filter(mOriginalDataset);
+        mAdapter.notifyDataSetChanged();
     }
 }
