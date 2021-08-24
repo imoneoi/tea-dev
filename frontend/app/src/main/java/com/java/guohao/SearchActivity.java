@@ -1,14 +1,18 @@
 package com.java.guohao;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentContainerView;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
+import com.google.android.material.navigation.NavigationView;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import java.util.ArrayList;
@@ -76,5 +80,14 @@ public class SearchActivity extends AppCompatActivity {
         mSearchBar.callOnClick();
 
         mView = findViewById(R.id.search_activity_view);
+
+        Button filterButton = findViewById(R.id.search_activity_filter_button);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout layout = findViewById(R.id.search_activity_drawer);
+                layout.open();
+            }
+        });
     }
 }
