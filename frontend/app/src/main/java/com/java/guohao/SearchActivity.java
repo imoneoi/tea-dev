@@ -2,8 +2,6 @@ package com.java.guohao;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -21,15 +19,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import java.util.ArrayList;
@@ -48,7 +43,8 @@ public class SearchActivity extends AppCompatActivity {
         @Override
         public void onSearchStateChanged(boolean enabled) {
             if (mSearchHistory.size() != historySize) {
-                Storage.save(SearchActivity.this, getString(R.string.storage_search_key), Helper.array2Str(mSearchHistory.toArray(new String[0])));
+                Storage.save(SearchActivity.this, getString(R.string.storage_search_key),
+                        Helper.array2Str(mSearchHistory.subList(0, GlobVar.MAX_SEARCH_HISTORY).toArray(new String[0])));
                 historySize = mSearchHistory.size();
             }
             if (!enabled) {
@@ -60,11 +56,9 @@ public class SearchActivity extends AppCompatActivity {
         public void onSearchConfirmed(CharSequence text) {
             Log.i("MainFragment", "Search: " + text); // TODO: search
             mSearchHistory.add(0, text.toString());
-            if (mSearchHistory.size() > GlobVar.MAX_SEARCH_HISTORY) {
-                mSearchHistory = (ArrayList<String>) mSearchHistory.subList(0, GlobVar.MAX_SEARCH_HISTORY);
-            }
             System.out.println(mSearchHistory.toString());
-            Storage.save(SearchActivity.this, getString(R.string.storage_search_key), Helper.array2Str(mSearchHistory.toArray(new String[0])));
+            Storage.save(SearchActivity.this, getString(R.string.storage_search_key),
+                    Helper.array2Str(mSearchHistory.subList(0, GlobVar.MAX_SEARCH_HISTORY).toArray(new String[0])));
 
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
@@ -80,7 +74,7 @@ public class SearchActivity extends AppCompatActivity {
 
         public ViewHolder(View view) {
             super(view);
-            mChip = (Chip) view.findViewById(R.id.search_filter_chip);
+            mChip = view.findViewById(R.id.search_filter_chip);
         }
 
         Chip getChip() {
@@ -106,8 +100,7 @@ public class SearchActivity extends AppCompatActivity {
         public SearchActivity.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.chip_search_filter, parent, false);
-            SearchActivity.ViewHolder h = new SearchActivity.ViewHolder(view);
-            return h;
+            return new ViewHolder(view);
         }
 
         @Override
@@ -171,6 +164,7 @@ public class SearchActivity extends AppCompatActivity {
 
         findViewById(R.id.search_activity_filter_layout).setVisibility(View.INVISIBLE);
         mSearchBar.setLastSuggestions(mSearchHistory);
+        mSearchBar.setMaxSuggestionCount(GlobVar.MAX_SEARCH_HISTORY);
         mSearchBar.callOnClick();
 
         mView = findViewById(R.id.search_activity_view);

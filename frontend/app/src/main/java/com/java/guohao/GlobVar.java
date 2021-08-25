@@ -13,9 +13,9 @@ public class GlobVar {
     public static final String REGISTER_ADDR = API_ADDR + "register";
     public static final String USERDATA_ADDR = API_ADDR + "userdata";
     public static final String PROC_ADDR = API_ADDR + "proc";
-    public static final String SUBJECTS[] = { "语文", "英语", "数学", "物理", "化学", "生物", "历史", "地理", "政治" };
-    public static final String SUBJECT_KEYWORDS[] = {"chinese", "english", "math", "physics", "chemistry", "biology", "history", "geo", "politics"};
-    public static final String EXAMPLE_SEARCH_KEYS[] = {"李", "ap", "函数", "力", "水", "胞", "战", "海", "思"};
+    public static final String[] SUBJECTS = { "语文", "英语", "数学", "物理", "化学", "生物", "历史", "地理", "政治" };
+    public static final String[] SUBJECT_KEYWORDS = {"chinese", "english", "math", "physics", "chemistry", "biology", "history", "geo", "politics"};
+    public static final String[] EXAMPLE_SEARCH_KEYS = {"李", "ap", "函数", "力", "水", "胞", "战", "海", "思"};
     public static HashMap<String, String> KEYWORD_OF_SUBJECT;
     public static HashMap<String, String> SUBJECT_OF_KEYWORD;
     public static HashMap<String, String> EXAMPLE_SEARCH_KEY_OF_SUBJECT;

@@ -1,15 +1,10 @@
 package com.java.guohao;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
-
-import java.util.List;
 
 public class Helper {
     public static void ImageViewAnimatedChange(Context c, final ImageView v, final Integer resId, final Integer colorId, long duration) {
@@ -38,12 +33,12 @@ public class Helper {
         v.startAnimation(anim_out);
     }
 
-    public static String array2Str(String l[]) {
+    public static String array2Str(String[] l) {
         return TextUtils.join("\n", l);
     }
 
     public static String[] str2Array(String s) {
-        if (s != "") {
+        if (!s.equals("")) {
             return s.split("\n");
         } else {
             return new String[0];
