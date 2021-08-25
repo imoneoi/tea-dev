@@ -58,7 +58,7 @@ def register(request):
     pw = post_json.get("passwd", "")
     data = post_json.get("data", "")
     if user and pw:
-        db_user = GUser(username=user, password=hashlib.sha1(pw.encode("utf-8")).hexdigest(), data=data)
+        db_user = GUser(username=user, password=hashlib.sha1(pw.encode("utf-8")).hexdigest(), data=data, session=uuid.uuid4())
         db_user.save()
         return JsonResponse({
             "ok": 1,
