@@ -3,11 +3,10 @@ package com.java.guohao;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,8 +33,9 @@ public class EntityInfoActivity extends AppCompatActivity {
     private static class SafeHandler extends Handler {
         private final WeakReference<AppCompatActivity> mParent;
         public SafeHandler(AppCompatActivity parent) {
-            mParent = new WeakReference<AppCompatActivity>(parent);
+            mParent = new WeakReference<>(parent);
         }
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -91,6 +91,7 @@ public class EntityInfoActivity extends AppCompatActivity {
     private String mStorageKey;
     private ArrayList<Property> mLocalDataset;
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,23 +109,15 @@ public class EntityInfoActivity extends AppCompatActivity {
 
         mTopBar = findViewById(R.id.entity_info_top_bar);
         mTopBar.setTitle(R.string.entity_info);
-        mTopBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EntityInfoActivity.this.finish();
-            }
-        });
-        mTopBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.entity_info_share : {
-                        share();
-                        break;
-                    }
+        mTopBar.setNavigationOnClickListener(v -> EntityInfoActivity.this.finish());
+        mTopBar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.entity_info_share : {
+                    share();
+                    break;
                 }
-                return false;
             }
+            return false;
         });
 
         mView = findViewById(R.id.entity_info_view);
@@ -136,14 +129,11 @@ public class EntityInfoActivity extends AppCompatActivity {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_entity_relationship, parent, false);
                 EntityInfoActivity.ViewHolder h = new ViewHolder(view);
 
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(v.getContext(), EntityInfoActivity.class);
-                        intent.putExtra(getString(R.string.label), h.getObject().getText().toString());
-                        intent.putExtra(getString(R.string.course), EntityInfoActivity.this.mCourse);
-                        startActivity(intent);
-                    }
+                view.setOnClickListener(v -> {
+                    Intent intent1 = new Intent(v.getContext(), EntityInfoActivity.class);
+                    intent1.putExtra(getString(R.string.label), h.getObject().getText().toString());
+                    intent1.putExtra(getString(R.string.course), EntityInfoActivity.this.mCourse);
+                    startActivity(intent1);
                 });
                 return h;
             }

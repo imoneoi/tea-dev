@@ -2,7 +2,6 @@ package com.java.guohao;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -17,16 +16,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.TreeMap;
 
 public class SearchActivity extends AppCompatActivity {
     private class SearchListener implements MaterialSearchBar.OnSearchActionListener {
@@ -68,7 +64,7 @@ public class SearchActivity extends AppCompatActivity {
 
         public ViewHolder(View view) {
             super(view);
-            mChip = (Chip) view.findViewById(R.id.search_filter_chip);
+            mChip = view.findViewById(R.id.search_filter_chip);
         }
 
         Chip getChip() {
@@ -94,8 +90,7 @@ public class SearchActivity extends AppCompatActivity {
         public SearchActivity.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.chip_search_filter, parent, false);
-            SearchActivity.ViewHolder h = new SearchActivity.ViewHolder(view);
-            return h;
+            return new ViewHolder(view);
         }
 
         @Override

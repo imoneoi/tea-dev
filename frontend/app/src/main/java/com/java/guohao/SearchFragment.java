@@ -23,7 +23,6 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -191,7 +190,7 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
                 view.setOnClickListener(v -> {
                     // history
-                    h.getPrimary().setTextColor(getResources().getColor(R.color.default_grey, getActivity().getTheme()));
+                    h.getPrimary().setTextColor(getResources().getColor(R.color.default_grey, requireActivity().getTheme()));
 
                     Intent intent = new Intent(v.getContext(), EntityInfoActivity.class);
                     intent.putExtra(getString(R.string.label), h.getPrimary().getText().toString());
@@ -209,15 +208,15 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 /* favourite */
                 if (HttpUtils.user.isFavourite(mLocalDataset.get(position).label)) {
                     holder.getFavourite().setImageResource(R.drawable.star);
-                    holder.getFavourite().setColorFilter(getResources().getColor(R.color.orange, getActivity().getTheme()));
+                    holder.getFavourite().setColorFilter(getResources().getColor(R.color.orange, requireActivity().getTheme()));
                 } else {
                     holder.getFavourite().setImageResource(R.drawable.star_border);
-                    holder.getFavourite().setColorFilter(getResources().getColor(R.color.default_grey, getActivity().getTheme()));
+                    holder.getFavourite().setColorFilter(getResources().getColor(R.color.default_grey, requireActivity().getTheme()));
                 }
 
                 /* history */
                 if (HttpUtils.user.isHistory(mLocalDataset.get(position).label)) {
-                    holder.getPrimary().setTextColor(getResources().getColor(R.color.default_grey, getActivity().getTheme()));
+                    holder.getPrimary().setTextColor(getResources().getColor(R.color.default_grey, requireActivity().getTheme()));
                 }
             }
 

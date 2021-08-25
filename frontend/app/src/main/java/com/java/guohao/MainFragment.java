@@ -1,5 +1,6 @@
 package com.java.guohao;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainFragment extends Fragment {
 
@@ -46,13 +48,10 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         mSearchBar = view.findViewById(R.id.main_search);
-        mSearchBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), SearchActivity.class);
-                intent.putExtra(getString(R.string.course), mTabBar.getTabAt(mTabBar.getSelectedTabPosition()).getText());
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-            }
+        mSearchBar.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SearchActivity.class);
+            intent.putExtra(getString(R.string.course), mTabBar.getTabAt(mTabBar.getSelectedTabPosition()).getText());
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
         });
 
         mViewPager = view.findViewById(R.id.main_tab_vp);
@@ -64,7 +63,7 @@ public class MainFragment extends Fragment {
 
             public Fragment createFragment(int pos) {
                 if (0 <= pos && pos < getItemCount()) {
-                    String query = String.valueOf(mTabBar.getTabAt(pos).getText());
+                    String query = String.valueOf(Objects.requireNonNull(mTabBar.getTabAt(pos)).getText());
                     return new SearchFragment(GlobVar.KEYWORD_OF_SUBJECT.get(query),
                                               GlobVar.EXAMPLE_SEARCH_KEY_OF_SUBJECT.get(query));
                 }
@@ -91,21 +90,11 @@ public class MainFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) { }
         });
         loadInitialTitles();
-        mMediator = new TabLayoutMediator(mTabBar, mViewPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                tab.setText(mInitialTitles.get(position));
-            }
-        });
+        mMediator = new TabLayoutMediator(mTabBar, mViewPager, (tab, position) -> tab.setText(mInitialTitles.get(position)));
         mMediator.attach();
 
         mEditButton = view.findViewById(R.id.main_edit_btn);
-        mEditButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new TabEditDialogFragment(MainFragment.this).show(getParentFragmentManager(), null);
-            }
-        });
+        mEditButton.setOnClickListener(v -> new TabEditDialogFragment(MainFragment.this).show(getParentFragmentManager(), null));
 
         return view;
     }
@@ -121,6 +110,7 @@ public class MainFragment extends Fragment {
         return mInitialTitles;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void onDialogPositiveClick(DialogFragment dialog) {
         this.mInitialTitles = ((TabEditDialogFragment) dialog).getInTitles();
         this.mPagerAdapter.notifyDataSetChanged();
