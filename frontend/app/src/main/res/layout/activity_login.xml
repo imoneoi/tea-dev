@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="登录"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/login_username"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="用户名"
+        android:layout_marginTop="10dp"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toTopOf="@id/login_password"
+        app:layout_constraintTop_toBottomOf="@id/login">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_username_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="密码"
+        app:endIconMode="password_toggle"
+        app:layout_constraintBottom_toBottomOf="@id/loginButton"
+        app:layout_constraintTop_toBottomOf="@id/login_username">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_password_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="登录"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_password" />
+
+
+    <TextView
+        android:id="@+id/register_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="没有账号？先去"
+        android:textAlignment="center"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/register_button"
+        app:layout_constraintTop_toTopOf="@id/login_password" />
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="68dp"
+        android:layout_height="35dp"
+        android:textSize="11sp"
+        android:text="注册→"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/register_text"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/login_password" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

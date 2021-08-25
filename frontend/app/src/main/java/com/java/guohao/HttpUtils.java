@@ -35,7 +35,7 @@ public class HttpUtils {
             public void handleMessage(@NonNull Message msg) {
                 try {
                     super.handleMessage(msg);
-                    User parent = (User) (mParent.get());
+                    User parent = mParent.get();
                     switch (msg.what) {
                         case USERDATA: {
                             JSONObject obj = new JSONObject(msg.obj.toString());
@@ -60,20 +60,9 @@ public class HttpUtils {
             history = new LinkedHashMap<>();
 
             // logged in
-            session = "774a7579-1b28-46b5-ab41-a1f543629ce0"; // hardcode
+            //session = "774a7579-1b28-46b5-ab41-a1f543629ce0"; // hardcode
+            session = "";
             mSearchKey = Storage.getKey(this.getClass().getSimpleName(), session);
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(500);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    getUserData();
-                }
-            }).start();
         }
 
         public void setFavourite(String label, boolean isFavourite) {
@@ -167,6 +156,40 @@ public class HttpUtils {
                 e.printStackTrace();
             }
         }
+
+        public static void register(String username, String passwd, String data, Handler handler) {
+            try {
+                JSONObject params = new JSONObject();
+                params.put("user", username);
+                params.put("passwd", passwd);
+                params.put("data", data);
+                Requests.post(GlobVar.REGISTER_ADDR, params, handler, REGISTER);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public static void login(String username, String passwd, Handler handler) {
+            try {
+                JSONObject params = new JSONObject();
+                params.put("user", username);
+                params.put("passwd", passwd);
+                Requests.post(GlobVar.LOGIN_ADDR, params, handler, LOGIN);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public static void checkSession(String session, Handler handler) {
+            try {
+                JSONObject params = new JSONObject();
+                params.put("session", session);
+                Requests.post(GlobVar.USERDATA_ADDR, params, handler, USERDATA);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public static User user = new User();
