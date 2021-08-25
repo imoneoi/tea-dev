@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,9 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 
 public class Register extends AppCompatActivity {
 
@@ -54,8 +53,8 @@ public class Register extends AppCompatActivity {
         TextInputEditText repeat_password = findViewById(R.id.register_repeat_password_text);
         Button register_button = findViewById(R.id.registerButton);
         register_button.setOnClickListener(v -> {
-            if (password.getText().toString().equals(repeat_password.getText().toString())) {
-                HttpUtils.User.register(username.getText().toString(), password.getText().toString(), "", mHandler);
+            if (Objects.requireNonNull(password.getText()).toString().equals(Objects.requireNonNull(repeat_password.getText()).toString())) {
+                HttpUtils.User.register(Objects.requireNonNull(username.getText()).toString(), password.getText().toString(), "", mHandler);
             } else {
                 Toast.makeText(this, "两次输入的密码不一致", Toast.LENGTH_LONG).show();
             }

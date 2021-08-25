@@ -1,5 +1,6 @@
 package com.java.guohao;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,13 +23,14 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static class SafeHandler extends Handler {
         private final WeakReference<Fragment> mParent;
         public SafeHandler(Fragment parent) {
-            mParent = new WeakReference<Fragment>(parent);
+            mParent = new WeakReference<>(parent);
         }
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -37,7 +39,7 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 SearchFragment parent = (SearchFragment)mParent.get();
                 String data = msg.obj.toString();
                 parent.parseData(data);
-                Storage.save(parent.getContext(), parent.mStorageKey, data);
+                Storage.save(parent.requireContext(), parent.mStorageKey, data);
                 parent.mRefresh.setRefreshing(false);
             }
         }
@@ -177,30 +179,24 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 ViewHolder h = new ViewHolder(view);
 
                 // star animation
-                view.findViewById(R.id.two_line_star).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String label = h.getPrimary().getText().toString();
-                        if (HttpUtils.user.isFavourite(label)) {
-                            Helper.ImageViewAnimatedChange(v.getContext(), v.findViewById(R.id.two_line_star), R.drawable.star_border, R.color.default_grey, 100);
-                        } else {
-                            Helper.ImageViewAnimatedChange(v.getContext(), v.findViewById(R.id.two_line_star), R.drawable.star, R.color.orange, 100);
-                        }
-                        HttpUtils.user.reverseFavourite(label);
+                view.findViewById(R.id.two_line_star).setOnClickListener(v -> {
+                    String label = h.getPrimary().getText().toString();
+                    if (HttpUtils.user.isFavourite(label)) {
+                        Helper.ImageViewAnimatedChange(v.getContext(), v.findViewById(R.id.two_line_star), R.drawable.star_border, R.color.default_grey, 100);
+                    } else {
+                        Helper.ImageViewAnimatedChange(v.getContext(), v.findViewById(R.id.two_line_star), R.drawable.star, R.color.orange, 100);
                     }
+                    HttpUtils.user.reverseFavourite(label);
                 });
 
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // history
-                        h.getPrimary().setTextColor(getResources().getColor(R.color.default_grey, getActivity().getTheme()));
+                view.setOnClickListener(v -> {
+                    // history
+                    h.getPrimary().setTextColor(getResources().getColor(R.color.default_grey, getActivity().getTheme()));
 
-                        Intent intent = new Intent(v.getContext(), EntityInfoActivity.class);
-                        intent.putExtra(getString(R.string.label), h.getPrimary().getText().toString());
-                        intent.putExtra(getString(R.string.course), SearchFragment.this.mCourse);
-                        startActivity(intent);
-                    }
+                    Intent intent = new Intent(v.getContext(), EntityInfoActivity.class);
+                    intent.putExtra(getString(R.string.label), h.getPrimary().getText().toString());
+                    intent.putExtra(getString(R.string.course), SearchFragment.this.mCourse);
+                    startActivity(intent);
                 });
                 return h;
             }
@@ -266,8 +262,8 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     public void initData() {
         mRefresh.setRefreshing(true);
-        if (Storage.contains(this.getContext(), mStorageKey)) {
-            parseData(Storage.load(this.getContext(), mStorageKey));
+        if (Storage.contains(this.requireContext(), mStorageKey)) {
+            parseData(Storage.load(this.requireContext(), mStorageKey));
             mRefresh.setRefreshing(false);
         } else {
             onRefresh();
@@ -282,6 +278,7 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
         return mFilter;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void filterData() {
         mLocalDataset = mFilter.filter(mOriginalDataset);
         mAdapter.notifyDataSetChanged();

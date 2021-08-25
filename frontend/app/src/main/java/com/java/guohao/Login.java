@@ -5,18 +5,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 
 public class Login extends AppCompatActivity {
 
@@ -53,7 +52,10 @@ public class Login extends AppCompatActivity {
         TextInputEditText username = findViewById(R.id.login_username_text);
         TextInputEditText password = findViewById(R.id.login_password_text);
         Button login_button = findViewById(R.id.loginButton), register_button = findViewById(R.id.register_button);
-        login_button.setOnClickListener(v -> HttpUtils.User.login(username.getText().toString(), password.getText().toString(), mHandler));
+        login_button.setOnClickListener(v -> HttpUtils.User.login(
+                Objects.requireNonNull(username.getText()).toString(),
+                Objects.requireNonNull(password.getText()).toString(), mHandler)
+        );
         register_button.setOnClickListener(v -> {
             Intent intent = new Intent(Login.this, Register.class);
             startActivity(intent);
