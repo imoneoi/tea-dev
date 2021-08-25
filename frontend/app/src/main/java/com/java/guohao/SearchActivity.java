@@ -3,6 +3,7 @@ package com.java.guohao;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -11,13 +12,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 
 import com.google.android.material.chip.Chip;
@@ -26,6 +34,7 @@ import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class SearchActivity extends AppCompatActivity {
@@ -51,6 +60,9 @@ public class SearchActivity extends AppCompatActivity {
         public void onSearchConfirmed(CharSequence text) {
             Log.i("MainFragment", "Search: " + text); // TODO: search
             mSearchHistory.add(0, text.toString());
+            if (mSearchHistory.size() > GlobVar.MAX_SEARCH_HISTORY) {
+                mSearchHistory = (ArrayList<String>) mSearchHistory.subList(0, GlobVar.MAX_SEARCH_HISTORY);
+            }
             System.out.println(mSearchHistory.toString());
             Storage.save(SearchActivity.this, getString(R.string.storage_search_key), Helper.array2Str(mSearchHistory.toArray(new String[0])));
 
@@ -102,16 +114,25 @@ public class SearchActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull SearchActivity.ViewHolder holder, int position) {
             String val = mAllData.keyAt(position);
             Chip chip = holder.getChip();
-            chip.setText(val);
+            if (val.length() > 4) {
+                chip.setText(val.substring(0, 4));
+            } else {
+                chip.setText(val);
+            }
             if (mLocalDataset.containsKey(val)) {
                 chip.setChecked(true);
             }
-            chip.setOnClickListener(new View.OnClickListener() {
+            chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
-                public void onClick(View v) {
-                    if (chip.isChecked()) mLocalDataset.remove(val);
-                    else mLocalDataset.put(val, 1);
-                    chip.setChecked(!chip.isChecked());
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    System.out.println(isChecked);
+                    Chip chip = buttonView.findViewById(R.id.search_filter_chip);
+                    if (isChecked) {
+                        mLocalDataset.put(val, 1);
+                    }
+                    else {
+                        mLocalDataset.remove(val);
+                    }
                 }
             });
         }
@@ -147,12 +168,15 @@ public class SearchActivity extends AppCompatActivity {
             mSearchHistory = new ArrayList<>(Arrays.asList(Helper.str2Array(
                     Storage.load(this, getString(R.string.storage_search_key)))));
         }
+
+        findViewById(R.id.search_activity_filter_layout).setVisibility(View.INVISIBLE);
         mSearchBar.setLastSuggestions(mSearchHistory);
         mSearchBar.callOnClick();
 
         mView = findViewById(R.id.search_activity_view);
 
         DrawerLayout layout = findViewById(R.id.search_activity_drawer);
+        layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         layout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -183,9 +207,36 @@ public class SearchActivity extends AppCompatActivity {
                 layout.open();
             }
         });
+
+        ArrayList<String> orders = new ArrayList<>();
+        orders.add("实体名称");
+        orders.add("实体类别");
+        orders.add("收藏优先");
+        AutoCompleteTextView tv = findViewById(R.id.search_activity_sort_menu_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.one_line_list, orders);
+        tv.setAdapter(adapter);
+        tv.setText(orders.get(0), false);
+        tv.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mSearchFragment.sortData(orders.indexOf(s.toString()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
     }
 
     public void onSearchFragmentUpdate() {
+        findViewById(R.id.search_activity_filter_layout).setVisibility(View.VISIBLE);
         mLabelAdapter.notifyDataSetChanged();
         mCategoryAdapter.notifyDataSetChanged();
     }

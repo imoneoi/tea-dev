@@ -22,8 +22,15 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+
+    public static final int LABEL_ORDER = 0;
+    public static final int CATEGORY_ORDER = 1;
+    public static final int FAVOURITE_ORDER = 2;
+
+    private int mCurOrder = LABEL_ORDER;
 
     private static class SafeHandler extends Handler {
         private final WeakReference<Fragment> mParent;
@@ -107,28 +114,9 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
         public ArrayList<EntitySearchResult> filter(ArrayList<EntitySearchResult> in) {
             ArrayList<EntitySearchResult> ret = new ArrayList<>();
             for (EntitySearchResult result : in) {
-                boolean put = false;
-                if (!mLabel.isEmpty()) {
-                    for (String s : mLabel.keySet()) {
-                        if (result.label.contains(s)) {
-                            put = true;
-                            break;
-                        }
-                    }
-                } else {
-                    put = true;
+                if ((mLabel.isEmpty() || mLabel.containsKey(result.label)) && (mCategory.isEmpty() || mCategory.containsKey(result.category))) {
+                    ret.add(result);
                 }
-                if (!mCategory.isEmpty()) {
-                    for (String s : mCategory.keySet()) {
-                        if (result.category.contains(s)) {
-                            put = true;
-                            break;
-                        }
-                    }
-                } else {
-                    put = true;
-                }
-                if (put) ret.add(result);
             }
             return ret;
         }
@@ -284,6 +272,24 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     public void filterData() {
         mLocalDataset = mFilter.filter(mOriginalDataset);
+        sortData(mCurOrder); // and notify
+    }
+
+    public void sortData(int order) {
+        mCurOrder = order;
+        switch (order) {
+            case LABEL_ORDER : {
+                mLocalDataset.sort((o1, o2) -> o1.label.compareTo(o2.label));
+                break;
+            } case CATEGORY_ORDER : {
+                mLocalDataset.sort((o1, o2) -> o1.category.compareTo(o2.category));
+                break;
+            } case FAVOURITE_ORDER : {
+                mLocalDataset.sort((o1, o2) -> HttpUtils.user.isFavourite(o1.label) ? -1 :
+                        ((HttpUtils.user.isFavourite(o2.label)) ? 1 : o1.label.compareTo(o2.label)));
+                break;
+            }
+        }
         mAdapter.notifyDataSetChanged();
     }
 }

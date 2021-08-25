@@ -3,6 +3,7 @@ package com.java.guohao;
 import java.util.HashMap;
 
 public class GlobVar {
+    public static final int MAX_SEARCH_HISTORY = 10;
     public static final int CONNECTION_TIMEOUT = 5000;
     public static final int SUCCESS_FROM_INTERNET = 0;
     public static final int SUCCESS_FROM_LOCAL = 1;
