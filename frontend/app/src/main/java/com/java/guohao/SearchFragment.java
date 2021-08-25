@@ -154,8 +154,7 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         mRefresh = view.findViewById(R.id.search_refresh);
         mRefresh.setOnRefreshListener(this); // onRefresh listens it

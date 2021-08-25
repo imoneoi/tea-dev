@@ -1,64 +1,78 @@
 package com.java.guohao;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.Objects;
+
 public class MeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    final String[] menu_text = {"我的收藏", "浏览历史", "外观", "退出登录"};
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView mText;
+        private final View mView;
 
-    public MeFragment() {
-        // Required empty public constructor
-    }
+        public ViewHolder(View view) {
+            super(view);
+            mText = view.findViewById(R.id.menu_item_text);
+            mView = view;
+        }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MeFragment newInstance(String param1, String param2) {
-        MeFragment fragment = new MeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+        public TextView getText() {
+            return mText;
+        }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        public View getView() {
+            return mView;
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_me, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_me, container, false);
+        RecyclerView mView = view.findViewById(R.id.me_view);
+        mView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        mView.setAdapter(new RecyclerView.Adapter<ViewHolder>() {
+            @NonNull
+            @Override
+            public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item, parent, false);
+                return new ViewHolder(view);
+            }
+
+            @Override
+            public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+                holder.getText().setText(menu_text[position]);
+                holder.getView().setOnClickListener(v -> {
+                    Class next_page = null;
+                    switch (position) {
+                        case 3:
+                            HttpUtils.user.session = "";
+                            ((MainActivity) requireActivity()).saveSession();
+                            next_page = Login.class;
+                            break;
+                    }
+                    Intent intent = new Intent(v.getContext(), next_page);
+                    startActivity(intent);
+                });
+            }
+
+            @Override
+            public int getItemCount() {
+                return menu_text.length;
+            }
+        });
+        return view;
     }
 }
