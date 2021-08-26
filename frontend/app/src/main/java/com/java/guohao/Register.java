@@ -67,4 +67,8 @@ public class Register extends AppCompatActivity {
         this.finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        jump2login();
+    }
 }
