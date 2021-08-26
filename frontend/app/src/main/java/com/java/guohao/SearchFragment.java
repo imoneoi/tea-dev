@@ -55,6 +55,7 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
         private final TextView mPrimary;
         private final TextView mSecondary;
         private final ImageView mFavourite;
+        public String uri;
 
         public ViewHolder(View view) {
             super(view);
@@ -186,6 +187,7 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     Intent intent = new Intent(v.getContext(), EntityInfoActivity.class);
                     intent.putExtra(getString(R.string.label), h.getPrimary().getText().toString());
                     intent.putExtra(getString(R.string.course), SearchFragment.this.mCourse);
+                    intent.putExtra(getString(R.string.uri), h.uri);
                     startActivity(intent);
                 });
                 return h;
@@ -195,6 +197,7 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
             public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
                 holder.getPrimary().setText(mLocalDataset.get(position).label);
                 holder.getSecondary().setText(mLocalDataset.get(position).category);
+                holder.uri = mLocalDataset.get(position).uri;
 
                 /* favourite */
                 if (HttpUtils.user.isFavourite(mLocalDataset.get(position).label)) {
