@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONObject;
@@ -51,7 +52,8 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         TextInputEditText username = findViewById(R.id.login_username_text);
         TextInputEditText password = findViewById(R.id.login_password_text);
-        Button login_button = findViewById(R.id.loginButton), register_button = findViewById(R.id.register_button);
+        FloatingActionButton login_button = findViewById(R.id.loginButton);
+        Button register_button = findViewById(R.id.register_button);
         login_button.setOnClickListener(v -> HttpUtils.User.login(
                 Objects.requireNonNull(username.getText()).toString(),
                 Objects.requireNonNull(password.getText()).toString(), mHandler)

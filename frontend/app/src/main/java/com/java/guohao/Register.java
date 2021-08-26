@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONObject;
@@ -51,7 +52,7 @@ public class Register extends AppCompatActivity {
         TextInputEditText username = findViewById(R.id.register_username_text);
         TextInputEditText password = findViewById(R.id.register_password_text);
         TextInputEditText repeat_password = findViewById(R.id.register_repeat_password_text);
-        Button register_button = findViewById(R.id.registerButton);
+        FloatingActionButton register_button = findViewById(R.id.registerButton);
         register_button.setOnClickListener(v -> {
             if (Objects.requireNonNull(password.getText()).toString().equals(Objects.requireNonNull(repeat_password.getText()).toString())) {
                 HttpUtils.User.register(Objects.requireNonNull(username.getText()).toString(), password.getText().toString(), "", mHandler);
