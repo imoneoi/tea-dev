@@ -17,4 +17,5 @@
     <string name="search_filter_title">筛选</string>
     <string name="search_filter_category_title">类型</string>
     <string name="search_filter_label_title">名称</string>
+    <string name="uri">uri</string>
 </resources>

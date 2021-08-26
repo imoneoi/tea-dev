@@ -229,4 +229,22 @@ public class HttpUtils {
             e.printStackTrace();
         }
     }
+
+    // http://open.edukg.cn/opedukg/api/typeOpen/open/relatedsubject
+    public static void getEntityRelationship(String course, String name, Handler handler) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("course", course);
+            data.put("subjectName", name);
+
+            JSONObject params = new JSONObject();
+            params.put("session", user.session);
+            params.put("url", "http://open.edukg.cn/opedukg/api/typeOpen/open/relatedsubject");
+            params.put("method", "POST");
+            params.put("data", data.toString());
+            Requests.post(GlobVar.PROC_ADDR, params, handler, GlobVar.SUCCESS_FROM_INTERNET);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
