@@ -44,7 +44,10 @@ public class SearchActivity extends AppCompatActivity {
         public void onSearchStateChanged(boolean enabled) {
             if (mSearchHistory.size() != historySize) {
                 Storage.save(SearchActivity.this, getString(R.string.storage_search_key),
-                        Helper.array2Str(mSearchHistory.subList(0, GlobVar.MAX_SEARCH_HISTORY).toArray(new String[0])));
+                        Helper.array2Str(
+                                mSearchHistory.size() > GlobVar.MAX_SEARCH_HISTORY ?
+                                        mSearchHistory.subList(0, GlobVar.MAX_SEARCH_HISTORY).toArray(new String[0]) :
+                                        mSearchHistory.toArray(new String[0])));
                 historySize = mSearchHistory.size();
             }
             if (!enabled) {
@@ -58,7 +61,10 @@ public class SearchActivity extends AppCompatActivity {
             mSearchHistory.add(0, text.toString());
             System.out.println(mSearchHistory.toString());
             Storage.save(SearchActivity.this, getString(R.string.storage_search_key),
-                    Helper.array2Str(mSearchHistory.subList(0, GlobVar.MAX_SEARCH_HISTORY).toArray(new String[0])));
+                    Helper.array2Str(
+                            mSearchHistory.size() > GlobVar.MAX_SEARCH_HISTORY ?
+                            mSearchHistory.subList(0, GlobVar.MAX_SEARCH_HISTORY).toArray(new String[0]) :
+                            mSearchHistory.toArray(new String[0])));
 
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
@@ -112,9 +118,7 @@ public class SearchActivity extends AppCompatActivity {
             } else {
                 chip.setText(val);
             }
-            if (mLocalDataset.containsKey(val)) {
-                chip.setChecked(true);
-            }
+            chip.setChecked(mLocalDataset.containsKey(val));
             chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
