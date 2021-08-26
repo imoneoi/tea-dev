@@ -17,7 +17,7 @@ import java.util.Map;
 public class HttpUtils {
 
     static class User {
-        String session = "";
+        String session;
         HashMap<String, Long> favourite; // label and timestamp
         LinkedHashMap<String, Long> history; // label and timestamp
 
@@ -36,16 +36,8 @@ public class HttpUtils {
                 try {
                     super.handleMessage(msg);
                     User parent = mParent.get();
-                    switch (msg.what) {
-                        case USERDATA: {
-                            JSONObject obj = new JSONObject(msg.obj.toString());
-                            parent.decodeData(obj.getString("data"));
-                            break;
-                        }
-                        default: {
-                            break;
-                        }
-                    }
+                    JSONObject obj = new JSONObject(msg.obj.toString());
+                    parent.decodeData(obj.getString("data"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -53,15 +45,11 @@ public class HttpUtils {
         }
 
         SafeHandler mHandler = new SafeHandler(this);
-        String mSearchKey = "";
+        String mSearchKey;
 
         User() {
             favourite = new HashMap<>();
             history = new LinkedHashMap<>();
-
-            // logged in
-            //session = "774a7579-1b28-46b5-ab41-a1f543629ce0"; // hardcode
-            session = "";
             mSearchKey = Storage.getKey(this.getClass().getSimpleName(), session);
         }
 

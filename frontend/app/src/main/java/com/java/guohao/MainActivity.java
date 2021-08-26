@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 if (obj.getInt("ok") == 0) {
                     parent.jump2login();
                 } else {
-                    Storage.save(parent, parent.mUserStorageKey, HttpUtils.user.session);
+                    parent.saveSession();
                     HttpUtils.user.getUserData();
                 }
             } catch (Exception e) {
@@ -97,6 +97,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     void jump2login() {
         Intent intent = new Intent(MainActivity.this, Login.class);
         startActivity(intent);
+    }
+
+    public void saveSession() {
+        Storage.save(this, mUserStorageKey, HttpUtils.user.session);
     }
 
 }
