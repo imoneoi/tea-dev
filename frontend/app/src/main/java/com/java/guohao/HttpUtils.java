@@ -17,7 +17,7 @@ import java.util.Map;
 public class HttpUtils {
 
     static class User {
-        String session;
+        String session, username;
         HashMap<String, Long> favourite; // label and timestamp
         LinkedHashMap<String, Long> history; // label and timestamp
 
@@ -159,6 +159,7 @@ public class HttpUtils {
 
         public static void login(String username, String passwd, Handler handler) {
             try {
+                user.username = username;
                 JSONObject params = new JSONObject();
                 params.put("user", username);
                 params.put("passwd", passwd);

@@ -33,6 +33,9 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/register_username_text"
+            android:maxLines="1"
+            android:lines="1"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -51,6 +54,9 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/register_password_text"
+            android:maxLines="1"
+            android:lines="1"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword" />
@@ -70,6 +76,9 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/register_repeat_password_text"
+            android:maxLines="1"
+            android:lines="1"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword" />
