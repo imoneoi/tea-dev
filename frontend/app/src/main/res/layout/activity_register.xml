@@ -29,7 +29,8 @@
         app:endIconMode="clear_text"
         app:startIconDrawable="@drawable/me"
         app:layout_constraintBottom_toTopOf="@id/register_password"
-        app:layout_constraintTop_toBottomOf="@id/register">
+        app:layout_constraintTop_toBottomOf="@id/register"
+        android:transitionName="username">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/register_username_text"
@@ -47,7 +48,8 @@
         app:startIconDrawable="@drawable/password"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintBottom_toBottomOf="@id/repeat_password"
-        app:layout_constraintTop_toBottomOf="@id/register_username">
+        app:layout_constraintTop_toBottomOf="@id/register_username"
+        android:transitionName="password">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/register_password_text"
@@ -87,7 +89,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/repeat_password"
         android:contentDescription="注册"
-        app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24"/>
+        app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+        android:transitionName="button_go"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

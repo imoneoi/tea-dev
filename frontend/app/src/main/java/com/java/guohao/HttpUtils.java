@@ -182,19 +182,26 @@ public class HttpUtils {
 
     public static User user = new User();
 
+    public static void sendData(JSONObject data, String url, String method, Handler handler) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("session", user.session);
+            params.put("url", url);
+            params.put("method", method);
+            params.put("data", data.toString());
+            Requests.post(GlobVar.PROC_ADDR, params, handler, GlobVar.SUCCESS_FROM_INTERNET);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // http://open.edukg.cn/opedukg/api/typeOpen/open/instanceList
     public static void searchEntity(String course, String searchKey, Handler handler) {
         try {
             JSONObject data = new JSONObject();
             data.put("course", course);
             data.put("searchKey", searchKey);
-
-            JSONObject params = new JSONObject();
-            params.put("session", user.session);
-            params.put("url", "http://open.edukg.cn/opedukg/api/typeOpen/open/instanceList");
-            params.put("method", "GET");
-            params.put("data", data.toString());
-            Requests.post(GlobVar.PROC_ADDR, params, handler, GlobVar.SUCCESS_FROM_INTERNET);
+            sendData(data, "http://open.edukg.cn/opedukg/api/typeOpen/open/instanceList", "GET", handler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -206,13 +213,7 @@ public class HttpUtils {
             JSONObject data = new JSONObject();
             data.put("course", course);
             data.put("name", name);
-
-            JSONObject params = new JSONObject();
-            params.put("session", user.session);
-            params.put("url", "http://open.edukg.cn/opedukg/api/typeOpen/open/infoByInstanceName");
-            params.put("method", "GET");
-            params.put("data", data.toString());
-            Requests.post(GlobVar.PROC_ADDR, params, handler, GlobVar.SUCCESS_FROM_INTERNET);
+            sendData(data, "http://open.edukg.cn/opedukg/api/typeOpen/open/infoByInstanceName", "GET", handler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -224,13 +225,19 @@ public class HttpUtils {
             JSONObject data = new JSONObject();
             data.put("course", course);
             data.put("subjectName", name);
+            sendData(data, "http://open.edukg.cn/opedukg/api/typeOpen/open/relatedsubject", "POST", handler);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            JSONObject params = new JSONObject();
-            params.put("session", user.session);
-            params.put("url", "http://open.edukg.cn/opedukg/api/typeOpen/open/relatedsubject");
-            params.put("method", "POST");
-            params.put("data", data.toString());
-            Requests.post(GlobVar.PROC_ADDR, params, handler, GlobVar.SUCCESS_FROM_INTERNET);
+    // http://open.edukg.cn/opedukg/api/typeOpen/open/questionListByUriName
+    public static void getQuestion(String course, String name, Handler handler) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("course", course);
+            data.put("uriName", name);
+            sendData(data, "http://open.edukg.cn/opedukg/api/typeOpen/open/questionListByUriName", "GET", handler);
         } catch (Exception e) {
             e.printStackTrace();
         }

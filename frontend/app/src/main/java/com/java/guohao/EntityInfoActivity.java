@@ -69,7 +69,7 @@ public class EntityInfoActivity extends AppCompatActivity {
                     } case 1 : {
                         return new EntityRelationshipFragment(mLabel, mCourse, mUri);
                     } case 2 : {
-                        return new EntityRelationshipFragment(mLabel, mCourse, mUri);
+                        return new EntityQuestionFragment(mLabel, mCourse, mUri);
                     }
                 }
                 return null;

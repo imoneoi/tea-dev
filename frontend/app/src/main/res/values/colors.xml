@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="orange">#FF7F00</color>
     <color name="default_grey">#757575</color>
+    <color name="light_grey">#F0F0F0</color>
+    <color name="right">#61D800</color>
+    <color name="wrong">#F47100</color>
 </resources>
