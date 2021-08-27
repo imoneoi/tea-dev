@@ -11,15 +11,14 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class HttpUtils {
 
     static class CourseLabel {
-        String course;
-        String label;
+        String course, label;
+
         CourseLabel(String course, String label) {
             this.course = course;
             this.label = label;
@@ -41,7 +40,7 @@ public class HttpUtils {
 
     static class User {
         String session, username;
-        HashMap<CourseLabel, Long> favourite; // label and timestamp
+        ArrayMap<CourseLabel, Long> favorite; // label and timestamp
         ArrayMap<CourseLabel, Long> history; // label and timestamp
 
         /* code of user-related operations */
@@ -71,16 +70,16 @@ public class HttpUtils {
         String mSearchKey;
 
         User() {
-            favourite = new HashMap<>();
+            favorite = new ArrayMap<>();
             history = new ArrayMap<>();
             mSearchKey = Storage.getKey(this.getClass().getSimpleName(), session);
         }
 
         public void setFavourite(CourseLabel courseLabel, boolean isFavourite) {
             if (!isFavourite) {
-                this.favourite.remove(courseLabel);
+                this.favorite.remove(courseLabel);
             } else {
-                this.favourite.put(courseLabel, new Timestamp(System.currentTimeMillis()).getTime());
+                this.favorite.put(courseLabel, new Timestamp(System.currentTimeMillis()).getTime());
             }
             this.updateUserData();
         }
@@ -90,7 +89,7 @@ public class HttpUtils {
         }
 
         public boolean isFavourite(CourseLabel courseLabel) {
-            return this.favourite.containsKey(courseLabel);
+            return this.favorite.containsKey(courseLabel);
         }
 
         public void addHistory(CourseLabel courseLabel) {
@@ -111,7 +110,7 @@ public class HttpUtils {
                 JSONArray favourite_arr = obj.getJSONArray("favourite");
                 for (int i = 0; i < favourite_arr.length(); ++i) {
                     JSONObject o = favourite_arr.getJSONObject(i);
-                    favourite.put(new CourseLabel(o.getString("course"), o.getString("label")), o.getLong("time"));
+                    favorite.put(new CourseLabel(o.getString("course"), o.getString("label")), o.getLong("time"));
                 }
 
                 JSONArray history_arr = obj.getJSONArray("history");
@@ -128,7 +127,7 @@ public class HttpUtils {
             try {
                 JSONObject obj = new JSONObject();
                 JSONArray favourite_arr = new JSONArray();
-                for (Map.Entry<CourseLabel, Long> item : favourite.entrySet()) {
+                for (Map.Entry<CourseLabel, Long> item : favorite.entrySet()) {
                     JSONObject o = new JSONObject();
                     o.put("label", item.getKey().label);
                     o.put("course", item.getKey().course);

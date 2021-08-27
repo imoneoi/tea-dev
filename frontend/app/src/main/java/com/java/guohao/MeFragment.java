@@ -69,9 +69,8 @@ public class MeFragment extends Fragment {
                 holder.getView().setOnClickListener(v -> {
                     Class next_page = null;
                     switch (position) {
-                        case 1:
-                            next_page = HistoryActivity.class;
-                            break;
+                        case 0: next_page = FavActivity.class; break;
+                        case 1: next_page = HistoryActivity.class; break;
                         case 3:
                             HttpUtils.user.session = "";
                             ((MainActivity) requireActivity()).saveUserData();

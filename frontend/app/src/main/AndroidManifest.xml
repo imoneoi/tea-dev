@@ -23,6 +23,8 @@
             android:exported="true" />
         <activity android:name=".RegisterActivity"
             android:exported="true" />
+        <activity android:name=".FavActivity"
+            android:exported="true" />
         <activity android:name=".HistoryActivity"
             android:exported="true" />
         <activity

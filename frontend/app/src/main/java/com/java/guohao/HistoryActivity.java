@@ -15,6 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -47,6 +51,17 @@ public class HistoryActivity extends AppCompatActivity {
         }
     }
 
+    static class HistoryItem {
+        public String label, course;
+        public long time;
+
+        HistoryItem(HttpUtils.CourseLabel key, long value) {
+            label = key.label;
+            course = key.course;
+            time = value;
+        }
+    }
+
     String deltaTime2text(long delta) {
         double t = delta / 1000.0;
         if (t < 60) {
@@ -65,6 +80,7 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private RecyclerView.Adapter<ViewHolder> mAdapter;
+    private List<HistoryItem> historyList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,22 +103,21 @@ public class HistoryActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-                HttpUtils.CourseLabel key = HttpUtils.user.history.keyAt(HttpUtils.user.history.size() - position - 1);
-                holder.getPrimaryText().setText(key.label);
-                holder.getSecondaryText().setText(GlobVar.SUBJECT_OF_KEYWORD.get(key.course));
-                long delta = new Timestamp(System.currentTimeMillis()).getTime() - HttpUtils.user.history.get(key);
-                holder.getTimeText().setText(deltaTime2text(delta));
+                HistoryItem cur = historyList.get(historyList.size() - position - 1);
+                holder.getPrimaryText().setText(cur.label);
+                holder.getSecondaryText().setText(GlobVar.SUBJECT_OF_KEYWORD.get(cur.course));
+                holder.getTimeText().setText(deltaTime2text(new Timestamp(System.currentTimeMillis()).getTime() - cur.time));
                 holder.getView().setOnClickListener(v -> {
                     Intent intent = new Intent(HistoryActivity.this, EntityInfoActivity.class);
-                    intent.putExtra(getString(R.string.course), key.course);
-                    intent.putExtra(getString(R.string.label), key.label);
+                    intent.putExtra(getString(R.string.course), cur.course);
+                    intent.putExtra(getString(R.string.label), cur.label);
                     startActivity(intent);
                 });
             }
 
             @Override
             public int getItemCount() {
-                return HttpUtils.user.history.size();
+                return historyList.size();
             }
         };
         mView.setAdapter(mAdapter);
@@ -111,6 +126,11 @@ public class HistoryActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mAdapter.notifyItemRangeChanged(0, HttpUtils.user.history.size());
+        historyList = new ArrayList<>();
+        for (Map.Entry<HttpUtils.CourseLabel, Long> item : HttpUtils.user.history.entrySet()) {
+            historyList.add(new HistoryItem(item.getKey(), item.getValue()));
+        }
+        historyList.sort(Comparator.comparingLong(o -> o.time));
+        mAdapter.notifyItemRangeChanged(0, historyList.size());
     }
 }
