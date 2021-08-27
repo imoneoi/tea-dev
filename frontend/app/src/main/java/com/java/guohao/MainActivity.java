@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 if (obj.getInt("ok") == 0) {
                     parent.jump2login();
                 } else {
-                    parent.saveSession();
+                    parent.saveUserData();
                     HttpUtils.user.getUserData();
                 }
             } catch (Exception e) {
@@ -52,7 +52,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     }
 
     SafeHandler mHandler = new SafeHandler(this);
-    String mUserStorageKey = Storage.getKey(getClass().getSimpleName(), "user");
+    String mSessionStorageKey = Storage.getKey(getClass().getSimpleName(), "user");
+    String mUsernameStorageKey = Storage.getKey(getClass().getSimpleName(), "username");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +64,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             mPosOfId.put(mIdOfPos[i], i);
         }
 
-        if (Storage.contains(this, mUserStorageKey)) {
-            HttpUtils.user.session = Storage.load(this, mUserStorageKey);
+        if (Storage.contains(this, mSessionStorageKey)) {
+            HttpUtils.user.session = Storage.load(this, mSessionStorageKey);
             HttpUtils.user.getUserData();
+            HttpUtils.user.username = Storage.load(this, mUsernameStorageKey);
         }
 
         mViewPager = findViewById(R.id.main_vp);
@@ -99,8 +102,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         startActivity(intent);
     }
 
-    public void saveSession() {
-        Storage.save(this, mUserStorageKey, HttpUtils.user.session);
+    public void saveUserData() {
+        Storage.save(this, mSessionStorageKey, HttpUtils.user.session);
+        Storage.save(this, mUsernameStorageKey, HttpUtils.user.username);
     }
 
 }
