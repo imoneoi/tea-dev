@@ -62,9 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     void jump2login() {
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(intent);
-        this.finish();
+        this.finishAfterTransition();
     }
 
     @Override
