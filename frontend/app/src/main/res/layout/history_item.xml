@@ -24,7 +24,6 @@
     <TextView
         android:layout_marginTop="8dp"
         android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
         android:id="@+id/history_item_primary_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -32,7 +31,7 @@
         android:maxLines="1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/history_time"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         android:textColor="?attr/colorOnSurface" />
 
@@ -40,7 +39,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
         android:id="@+id/history_item_secondary_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -51,7 +49,23 @@
         android:textColor="@color/default_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/history_time"
         app:layout_constraintTop_toBottomOf="@id/history_item_primary_text" />
 
+    <TextView
+        android:padding="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="24dp"
+        android:id="@+id/history_time"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:maxLines="1"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/default_grey"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/history_item_primary_text"
+        app:layout_constraintRight_toRightOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

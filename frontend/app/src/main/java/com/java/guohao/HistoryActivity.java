@@ -13,16 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 
+import java.sql.Timestamp;
+
 public class HistoryActivity extends AppCompatActivity {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView mPrimaryText, mSecondaryText;
+        private final TextView mPrimaryText, mSecondaryText, mTimeText;
         private final View mView;
 
         public ViewHolder(View view) {
             super(view);
             mPrimaryText = view.findViewById(R.id.history_item_primary_text);
             mSecondaryText = view.findViewById(R.id.history_item_secondary_text);
+            mTimeText = view.findViewById(R.id.history_time);
             mView = view;
         }
 
@@ -34,9 +37,30 @@ public class HistoryActivity extends AppCompatActivity {
             return mSecondaryText;
         }
 
+        public TextView getTimeText() {
+            return mTimeText;
+        }
+
         public View getView() {
             return mView;
         }
+    }
+
+    String deltaTime2text(long delta) {
+        double t = delta / 1000.0;
+        if (t < 60) {
+            return (int) t + "秒前";
+        }
+        t /= 60;
+        if (t < 120) {
+            return (int) t + "分钟前";
+        }
+        t /= 60;
+        if (t < 24) {
+            return (int) t + "小时前";
+        }
+        t /= 24;
+        return (int) t + "天前";
     }
 
     @Override
@@ -62,7 +86,8 @@ public class HistoryActivity extends AppCompatActivity {
             public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
                 String primaryText = HttpUtils.user.history.keyAt(position);
                 holder.getPrimaryText().setText(primaryText);
-                holder.getSecondaryText().setText(String.valueOf(System.currentTimeMillis() - HttpUtils.user.history.get(primaryText)));
+                long delta = new Timestamp(System.currentTimeMillis()).getTime() - HttpUtils.user.history.get(primaryText);
+                holder.getTimeText().setText(deltaTime2text(delta));
                 holder.getView().setOnClickListener(v -> {
                 });
             }
