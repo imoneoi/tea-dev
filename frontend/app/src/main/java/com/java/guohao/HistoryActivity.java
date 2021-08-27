@@ -1,5 +1,6 @@
 package com.java.guohao;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,8 @@ public class HistoryActivity extends AppCompatActivity {
         return (int) t + "天前";
     }
 
+    private RecyclerView.Adapter<ViewHolder> mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +77,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         RecyclerView mView = findViewById(R.id.history_view);
         mView.setLayoutManager(new LinearLayoutManager(this));
-        mView.setAdapter(new RecyclerView.Adapter<ViewHolder>() {
+        mAdapter = new RecyclerView.Adapter<ViewHolder>() {
             @NonNull
             @Override
             public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -84,11 +87,16 @@ public class HistoryActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-                String primaryText = HttpUtils.user.history.keyAt(position).label;
-                holder.getPrimaryText().setText(primaryText);
-                long delta = new Timestamp(System.currentTimeMillis()).getTime() - HttpUtils.user.history.get(primaryText);
+                HttpUtils.CourseLabel key = HttpUtils.user.history.keyAt(HttpUtils.user.history.size() - position - 1);
+                holder.getPrimaryText().setText(key.label);
+                holder.getSecondaryText().setText(GlobVar.SUBJECT_OF_KEYWORD.get(key.course));
+                long delta = new Timestamp(System.currentTimeMillis()).getTime() - HttpUtils.user.history.get(key);
                 holder.getTimeText().setText(deltaTime2text(delta));
                 holder.getView().setOnClickListener(v -> {
+                    Intent intent = new Intent(HistoryActivity.this, EntityInfoActivity.class);
+                    intent.putExtra(getString(R.string.course), key.course);
+                    intent.putExtra(getString(R.string.label), key.label);
+                    startActivity(intent);
                 });
             }
 
@@ -96,7 +104,13 @@ public class HistoryActivity extends AppCompatActivity {
             public int getItemCount() {
                 return HttpUtils.user.history.size();
             }
-        });
+        };
+        mView.setAdapter(mAdapter);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAdapter.notifyItemRangeChanged(0, HttpUtils.user.history.size());
+    }
 }

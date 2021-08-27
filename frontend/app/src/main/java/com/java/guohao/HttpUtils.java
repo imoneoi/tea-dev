@@ -94,6 +94,9 @@ public class HttpUtils {
         }
 
         public void addHistory(CourseLabel courseLabel) {
+            if (isHistory(courseLabel)) {
+                history.remove(courseLabel);
+            }
             this.history.put(courseLabel, new Timestamp(System.currentTimeMillis()).getTime());
             this.updateUserData();
         }
