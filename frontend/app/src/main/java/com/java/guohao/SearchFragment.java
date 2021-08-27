@@ -171,13 +171,13 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
                 // star animation
                 view.findViewById(R.id.two_line_star).setOnClickListener(v -> {
-                    String label = h.getPrimary().getText().toString();
-                    if (HttpUtils.user.isFavourite(label)) {
+                    HttpUtils.CourseLabel courseLabel = new HttpUtils.CourseLabel(mCourse, h.getPrimary().getText().toString());
+                    if (HttpUtils.user.isFavourite(courseLabel)) {
                         Helper.ImageViewAnimatedChange(v.getContext(), v.findViewById(R.id.two_line_star), R.drawable.star_border, R.color.default_grey, 100);
                     } else {
                         Helper.ImageViewAnimatedChange(v.getContext(), v.findViewById(R.id.two_line_star), R.drawable.star, R.color.orange, 100);
                     }
-                    HttpUtils.user.reverseFavourite(label);
+                    HttpUtils.user.reverseFavourite(courseLabel);
                 });
 
                 view.setOnClickListener(v -> {
@@ -200,7 +200,8 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 holder.uri = mLocalDataset.get(position).uri;
 
                 /* favourite */
-                if (HttpUtils.user.isFavourite(mLocalDataset.get(position).label)) {
+                HttpUtils.CourseLabel cl = new HttpUtils.CourseLabel(mCourse, mLocalDataset.get(position).label);
+                if (HttpUtils.user.isFavourite(cl)) {
                     holder.getFavourite().setImageResource(R.drawable.star);
                     holder.getFavourite().setColorFilter(getResources().getColor(R.color.orange, requireActivity().getTheme()));
                 } else {
@@ -209,7 +210,7 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 }
 
                 /* history */
-                if (HttpUtils.user.isHistory(mLocalDataset.get(position).label)) {
+                if (HttpUtils.user.isHistory(cl)) {
                     holder.getPrimary().setTextColor(getResources().getColor(R.color.default_grey, requireActivity().getTheme()));
                 }
             }
@@ -287,8 +288,8 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 mLocalDataset.sort((o1, o2) -> o1.category.compareTo(o2.category));
                 break;
             } case FAVOURITE_ORDER : {
-                mLocalDataset.sort((o1, o2) -> HttpUtils.user.isFavourite(o1.label) ? -1 :
-                        ((HttpUtils.user.isFavourite(o2.label)) ? 1 : o1.label.compareTo(o2.label)));
+                mLocalDataset.sort((o1, o2) -> HttpUtils.user.isFavourite(new HttpUtils.CourseLabel(mCourse, o1.label)) ? -1 :
+                        ((HttpUtils.user.isFavourite(new HttpUtils.CourseLabel(mCourse, o2.label))) ? 1 : o1.label.compareTo(o2.label)));
                 break;
             }
         }

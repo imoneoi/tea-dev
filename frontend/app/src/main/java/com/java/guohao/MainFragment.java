@@ -49,7 +49,7 @@ public class MainFragment extends Fragment {
         mSearchBar = view.findViewById(R.id.main_search);
         mSearchBar.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), SearchActivity.class);
-            intent.putExtra(getString(R.string.course), Objects.requireNonNull(mTabBar.getTabAt(mTabBar.getSelectedTabPosition())).getText());
+            intent.putExtra(getString(R.string.course), GlobVar.KEYWORD_OF_SUBJECT.get(Objects.requireNonNull(mTabBar.getTabAt(mTabBar.getSelectedTabPosition())).getText()));
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
         });
 

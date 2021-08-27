@@ -84,7 +84,7 @@ public class HistoryActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-                String primaryText = HttpUtils.user.history.keyAt(position);
+                String primaryText = HttpUtils.user.history.keyAt(position).label;
                 holder.getPrimaryText().setText(primaryText);
                 long delta = new Timestamp(System.currentTimeMillis()).getTime() - HttpUtils.user.history.get(primaryText);
                 holder.getTimeText().setText(deltaTime2text(delta));

@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import org.json.JSONArray;
@@ -28,6 +30,8 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class EntityQuestionFragment extends Fragment {
@@ -86,6 +90,15 @@ public class EntityQuestionFragment extends Fragment {
         }
     }
 
+    private static HashMap<String, String> mChoiceMap;
+    static {
+        mChoiceMap = new HashMap<>();
+        mChoiceMap.put("①", "A.");
+        mChoiceMap.put("②", "B.");
+        mChoiceMap.put("③", "C.");
+        mChoiceMap.put("④", "D.");
+    }
+
     private SafeHandler mHandler = new SafeHandler(this);
     private String mStorageKey;
     private String mLabel;
@@ -97,6 +110,7 @@ public class EntityQuestionFragment extends Fragment {
     RecyclerView mView;
     TextView mQuestion;
     TextView mNum;
+    CircularProgressIndicator mLoading;
     Button mPrev;
     Button mNext;
     SwitchMaterial mIsShowAnswer;
@@ -121,9 +135,13 @@ public class EntityQuestionFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entity_question, container, false);
-
+        mLoading = view.findViewById(R.id.entity_question_loading);
         mQuestion = view.findViewById(R.id.entity_question_question);
         mIsShowAnswer = view.findViewById(R.id.entity_question_show_answer);
+        mIsShowAnswer.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            mAdapter.notifyItemRangeRemoved(0, mLocalDataset.choices.size());
+            mAdapter.notifyItemRangeInserted(0, mLocalDataset.choices.size());
+        });
         mNum = view.findViewById(R.id.entity_question_num);
         mPrev = view.findViewById(R.id.entity_question_prev);
         mNext = view.findViewById(R.id.entity_question_next);
@@ -152,7 +170,8 @@ public class EntityQuestionFragment extends Fragment {
                         // correct
                         if (mLocalDataset.myAnswer == Question.UNANSWERED) {
                             mLocalDataset.myAnswer = h.getBindingAdapterPosition();
-                            notifyDataSetChanged();
+                            mAdapter.notifyItemRangeRemoved(0, mLocalDataset.choices.size());
+                            mAdapter.notifyItemRangeInserted(0, mLocalDataset.choices.size());
                         }
                     }
                 });
@@ -167,9 +186,9 @@ public class EntityQuestionFragment extends Fragment {
                 if (mLocalDataset.myAnswer != Question.UNANSWERED || mIsShowAnswer.isChecked()) {
                     // display correct answer
                     if (holder.getBindingAdapterPosition() == mLocalDataset.answer) {
-                        icon.setImageResource(R.drawable.check);
+                        Helper.ImageViewFadeIn(requireContext(), icon, R.drawable.check, 200);
                     } else if (holder.getBindingAdapterPosition() == mLocalDataset.myAnswer) {
-                        icon.setImageResource(R.drawable.delete);
+                        Helper.ImageViewFadeIn(requireContext(), icon, R.drawable.delete, 200);
                     } else {
                         icon.setImageResource(0);
                     }
@@ -197,10 +216,20 @@ public class EntityQuestionFragment extends Fragment {
             for (int i = 0; i < data.length(); ++i) {
                 Question q = new Question();
                 JSONObject item = data.getJSONObject(i);
+                System.out.println(item);
                 q.id = item.getInt("id");
-                q.answer = item.getString("qAnswer").charAt(0) - 'A';
-                // get question and choice
+                String answerStr = item.getString("qAnswer"); // fucking quan 1
                 String body = item.getString("qBody");
+                for (Map.Entry<String, String> e : mChoiceMap.entrySet()) {
+                    answerStr = answerStr.replace(e.getKey(), e.getValue());
+                }
+                if (!answerStr.equals(item.getString("qAnswer"))) {
+                    for (Map.Entry<String, String> e : mChoiceMap.entrySet()) {
+                        body = body.replace(e.getKey(), e.getValue());
+                    }
+                }
+                q.answer = answerStr.charAt(0) - 'A';
+                // get question and choice
                 ArrayList<Integer> splitIndex = new ArrayList<>();
                 splitIndex.add(0);
                 for (char c = 'A'; c <= 'D'; ++c) {
@@ -217,6 +246,7 @@ public class EntityQuestionFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mLoading.setVisibility(View.GONE);
     }
 
     private void initData() {
@@ -233,10 +263,11 @@ public class EntityQuestionFragment extends Fragment {
         }
 
         currentQuestion = index;
+        mAdapter.notifyItemRangeRemoved(0, mLocalDataset.choices.size());
         mLocalDataset = mAllDataset.get(index);
         mNum.setText(String.format("%d/%d", index + 1, mAllDataset.size()));
         mQuestion.setText(mLocalDataset.question);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyItemRangeInserted(0, mLocalDataset.choices.size());
     }
 
     // get data from Internet

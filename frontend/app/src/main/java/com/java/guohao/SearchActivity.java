@@ -156,8 +156,8 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         Intent intent = getIntent();
-        mChineseCourse = intent.getStringExtra(getString(R.string.course));
-        mCourse = GlobVar.KEYWORD_OF_SUBJECT.get(mChineseCourse);
+        mCourse = intent.getStringExtra(getString(R.string.course));
+        mChineseCourse = GlobVar.SUBJECT_OF_KEYWORD.get(mCourse);
         mSearchBar = findViewById(R.id.search_activity_search);
         mSearchBar.setOnSearchActionListener(mListener);
         mSearchBar.setHint("在 " + mChineseCourse + " 学科搜索");
