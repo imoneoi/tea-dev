@@ -33,6 +33,13 @@ public class Helper {
         v.startAnimation(anim_out);
     }
 
+    public static void ImageViewFadeIn(Context c, final ImageView v, final Integer resId, long duration) {
+        final Animation anim_in  = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);
+        anim_in.setDuration(duration);
+        v.setImageResource(resId);
+        v.startAnimation(anim_in);
+    }
+
     public static String array2Str(String[] l) {
         return TextUtils.join("\n", l);
     }

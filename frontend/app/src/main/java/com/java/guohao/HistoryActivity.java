@@ -60,7 +60,7 @@ public class HistoryActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-                String primaryText = HttpUtils.user.history.keyAt(position);
+                String primaryText = HttpUtils.user.history.keyAt(position).label;
                 holder.getPrimaryText().setText(primaryText);
                 holder.getSecondaryText().setText(String.valueOf(System.currentTimeMillis() - HttpUtils.user.history.get(primaryText)));
                 holder.getView().setOnClickListener(v -> {

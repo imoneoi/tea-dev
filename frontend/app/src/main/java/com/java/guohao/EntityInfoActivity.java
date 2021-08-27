@@ -87,7 +87,7 @@ public class EntityInfoActivity extends AppCompatActivity {
         mMediator.attach();
 
         // add history
-        HttpUtils.user.addHistory(mLabel);
+        HttpUtils.user.addHistory(new HttpUtils.CourseLabel(mCourse, mLabel));
     }
 
     private void share() {

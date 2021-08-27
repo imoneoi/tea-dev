@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -78,6 +80,7 @@ public class EntityRelationshipFragment extends Fragment {
     private ArrayList<Relationship> mLocalDataset;
     RecyclerView mView;
     RecyclerView.Adapter<ViewHolder> mAdapter;
+    CircularProgressIndicator mLoading;
 
     public EntityRelationshipFragment() {
         this("", "", "");
@@ -96,6 +99,7 @@ public class EntityRelationshipFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entity_relationship, container, false);
+        mLoading = view.findViewById(R.id.entity_relationship_loading);
         mView = view.findViewById(R.id.entity_relationship_view);
         mView.setLayoutManager(new LinearLayoutManager(requireContext()));
         mAdapter = new RecyclerView.Adapter<ViewHolder>() {
@@ -151,6 +155,7 @@ public class EntityRelationshipFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mLoading.setVisibility(View.GONE);
     }
 
     private void initData() {

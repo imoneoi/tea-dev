@@ -32,7 +32,6 @@
             android:layout_below="@id/entity_info_predicate_label"
             android:layout_gravity="center_vertical"
             android:alpha="0.87"
-            android:maxLines="1"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="@color/default_grey"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -80,6 +82,7 @@ public class EntityInfoFragment extends Fragment {
     private String mCourse;
     private String mUri;
     RecyclerView mView;
+    CircularProgressIndicator mLoading;
 
     public EntityInfoFragment() {
         this("", "", "");
@@ -98,6 +101,7 @@ public class EntityInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_entity_info, container, false);
+        mLoading = view.findViewById(R.id.entity_info_loading);
         mView = view.findViewById(R.id.entity_info_view);
         mView.setLayoutManager(new LinearLayoutManager(requireContext()));
         mInfoAdapter = new RecyclerView.Adapter<EntityInfoFragment.ViewHolder>() {
@@ -150,6 +154,7 @@ public class EntityInfoFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mLoading.setVisibility(View.GONE);
     }
 
     private void initData() {
