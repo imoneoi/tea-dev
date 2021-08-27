@@ -14,8 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Objects;
-
 public class MeFragment extends Fragment {
 
     final String[] menu_text = {"我的收藏", "浏览历史", "设置", "退出登录"};
@@ -71,10 +69,13 @@ public class MeFragment extends Fragment {
                 holder.getView().setOnClickListener(v -> {
                     Class next_page = null;
                     switch (position) {
+                        case 1:
+                            next_page = HistoryActivity.class;
+                            break;
                         case 3:
                             HttpUtils.user.session = "";
                             ((MainActivity) requireActivity()).saveUserData();
-                            next_page = Login.class;
+                            next_page = LoginActivity.class;
                             Toast.makeText(v.getContext(), "成功登出", Toast.LENGTH_LONG).show();
                             break;
                     }

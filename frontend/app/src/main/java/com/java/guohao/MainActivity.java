@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     }
 
     void jump2login() {
-        Intent intent = new Intent(MainActivity.this, Login.class);
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 

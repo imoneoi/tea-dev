@@ -18,18 +18,18 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
-public class Login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private static class SafeHandler extends Handler {
-        private final WeakReference<Login> mParent;
-        public SafeHandler(Login parent) {
+        private final WeakReference<LoginActivity> mParent;
+        public SafeHandler(LoginActivity parent) {
             mParent = new WeakReference<>(parent);
         }
         @Override
         public void handleMessage(@NonNull Message msg) {
             try {
                 super.handleMessage(msg);
-                Login parent = mParent.get();
+                LoginActivity parent = mParent.get();
                 JSONObject obj = new JSONObject(msg.obj.toString());
                 if (obj.get("ok").equals(1)) {
                     Toast.makeText(parent, "登录成功", Toast.LENGTH_LONG).show();
@@ -59,7 +59,7 @@ public class Login extends AppCompatActivity {
                 Objects.requireNonNull(password.getText()).toString(), mHandler)
         );
         register_button.setOnClickListener(v -> {
-            Intent intent = new Intent(Login.this, Register.class);
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
             this.finish();
         });

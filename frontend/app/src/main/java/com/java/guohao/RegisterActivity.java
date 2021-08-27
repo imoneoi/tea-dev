@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,18 +17,18 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
-public class Register extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
     private static class SafeHandler extends Handler {
-        private final WeakReference<Register> mParent;
-        public SafeHandler(Register parent) {
+        private final WeakReference<RegisterActivity> mParent;
+        public SafeHandler(RegisterActivity parent) {
             mParent = new WeakReference<>(parent);
         }
         @Override
         public void handleMessage(@NonNull Message msg) {
             try {
                 super.handleMessage(msg);
-                Register parent = mParent.get();
+                RegisterActivity parent = mParent.get();
                 JSONObject obj = new JSONObject(msg.obj.toString());
                 if (obj.get("ok").equals(1)) {
                     Toast.makeText(parent, "注册成功", Toast.LENGTH_LONG).show();
@@ -63,7 +62,7 @@ public class Register extends AppCompatActivity {
     }
 
     void jump2login() {
-        Intent intent = new Intent(Register.this, Login.class);
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
         this.finish();
     }

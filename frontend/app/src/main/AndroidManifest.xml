@@ -19,9 +19,11 @@
         <activity
             android:name=".EntityInfoActivity"
             android:exported="true" />
-        <activity android:name=".Login"
+        <activity android:name=".LoginActivity"
             android:exported="true" />
-        <activity android:name=".Register"
+        <activity android:name=".RegisterActivity"
+            android:exported="true" />
+        <activity android:name=".HistoryActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

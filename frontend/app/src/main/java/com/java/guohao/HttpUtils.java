@@ -2,6 +2,7 @@ package com.java.guohao;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.ArrayMap;
 
 import androidx.annotation.NonNull;
 
@@ -11,7 +12,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class HttpUtils {
@@ -19,7 +19,7 @@ public class HttpUtils {
     static class User {
         String session, username;
         HashMap<String, Long> favourite; // label and timestamp
-        LinkedHashMap<String, Long> history; // label and timestamp
+        ArrayMap<String, Long> history; // label and timestamp
 
         /* code of user-related operations */
         final static int REGISTER = 0;
@@ -29,7 +29,7 @@ public class HttpUtils {
         private static class SafeHandler extends Handler {
             private final WeakReference<User> mParent;
             public SafeHandler(User parent) {
-                mParent = new WeakReference<User>(parent);
+                mParent = new WeakReference<>(parent);
             }
             @Override
             public void handleMessage(@NonNull Message msg) {
@@ -49,7 +49,7 @@ public class HttpUtils {
 
         User() {
             favourite = new HashMap<>();
-            history = new LinkedHashMap<>();
+            history = new ArrayMap<>();
             mSearchKey = Storage.getKey(this.getClass().getSimpleName(), session);
         }
 
