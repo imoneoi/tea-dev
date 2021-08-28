@@ -16,13 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MeFragment extends Fragment {
 
-    final String[] menu_text = {"我的收藏", "浏览历史", "设置", "退出登录"};
-    final int[] icon_id = {
-            R.drawable.star_border,
-            R.drawable.ic_baseline_history_24,
-            R.drawable.ic_baseline_settings_24,
-            R.drawable.baseline_logout_24
+    private final String[] menu_text = {"我的收藏", "浏览历史", "设置", "退出登录"};
+    private final int[] icon_id = {
+        R.drawable.star_border,
+        R.drawable.ic_baseline_history_24,
+        R.drawable.ic_baseline_settings_24,
+        R.drawable.baseline_logout_24
     };
+    private final Class[] next_page = {FavActivity.class, HistoryActivity.class, null, LoginActivity.class};
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView mText;
@@ -67,18 +68,12 @@ public class MeFragment extends Fragment {
                 holder.getText().setText(menu_text[position]);
                 holder.getImage().setImageResource(icon_id[position]);
                 holder.getView().setOnClickListener(v -> {
-                    Class next_page = null;
-                    switch (position) {
-                        case 0: next_page = FavActivity.class; break;
-                        case 1: next_page = HistoryActivity.class; break;
-                        case 3:
-                            HttpUtils.user.session = "";
-                            ((MainActivity) requireActivity()).saveUserData();
-                            next_page = LoginActivity.class;
-                            Toast.makeText(v.getContext(), "成功登出", Toast.LENGTH_LONG).show();
-                            break;
+                    if (position == 3) {
+                        HttpUtils.user.session = "";
+                        ((MainActivity) requireActivity()).saveUserData();
+                        Toast.makeText(v.getContext(), "成功登出", Toast.LENGTH_LONG).show();
                     }
-                    Intent intent = new Intent(v.getContext(), next_page);
+                    Intent intent = new Intent(v.getContext(), next_page[position]);
                     startActivity(intent);
                 });
             }

@@ -23,7 +23,6 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
