@@ -1,10 +1,14 @@
 package com.java.guohao;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class Helper {
     public static void ImageViewAnimatedChange(Context c, final ImageView v, final Integer resId, final Integer colorId, long duration) {
@@ -50,6 +54,11 @@ public class Helper {
         } else {
             return new String[0];
         }
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 }
 

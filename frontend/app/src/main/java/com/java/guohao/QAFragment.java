@@ -2,68 +2,167 @@ package com.java.guohao;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link QAFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.chivorn.smartmaterialspinner.SmartMaterialSpinner;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class QAFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public QAFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment QAFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static QAFragment newInstance(String param1, String param2) {
-        QAFragment fragment = new QAFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    private static class SafeHandler extends Handler {
+        private final WeakReference<QAFragment> mParent;
+        public SafeHandler(QAFragment parent) {
+            mParent = new WeakReference<>(parent);
+        }
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            String text = "系统异常，请稍后重试";
+            QAFragment parent = mParent.get();
+            try {
+                JSONObject obj = new JSONObject(msg.obj.toString());
+                System.out.println(obj);
+                JSONObject data = obj.getJSONArray("data").getJSONObject(0);
+                System.out.println(data);
+                String subject = data.getString("subject");
+                String score = String.valueOf(data.getDouble("score"));
+                String answer = data.getString("value");
+                if (answer.isEmpty()) {
+                    text = data.getString("message");
+                } else {
+                    text = "相关实体: " + subject + "\n" + "分数: " + score + "\n" + "答案: " + answer;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            parent.mLocalDataset.add(new QAMessage(QAMessage.ROBOT, "", text));
+            parent.mAdapter.notifyItemInserted(parent.mLocalDataset.size() - 1);
         }
     }
+
+    private SafeHandler mHandler = new SafeHandler(this);
+    
+    RecyclerView mView;
+    EditText mQuestion;
+    TextInputLayout mQuestionLayout;
+    SmartMaterialSpinner<String> mCourse;
+    FloatingActionButton mSubmit;
+    RecyclerView.Adapter<RecyclerView.ViewHolder> mAdapter;
+
+    public static class QAMessage {
+        public static final int USER = 0;
+        public static final int ROBOT = 1;
+        public int from;
+        public String course;
+        public String text;
+        public QAMessage(int from, String course, String text) {
+            this.from = from;
+            this.course = course;
+            this.text = text;
+        }
+    }
+
+    ArrayList<QAMessage> mLocalDataset;
+    
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        mLocalDataset = new ArrayList<>();
         View view = inflater.inflate(R.layout.fragment_q_a, container, false);
-        double x = Math.random();
-        TextView tv = view.findViewById(R.id.qa_text);
-        tv.setText(String.valueOf(x));
+        mView = view.findViewById(R.id.qa_view);
+        mQuestion = view.findViewById(R.id.qa_question);
+        mQuestionLayout = view.findViewById(R.id.qa_input);
+        mSubmit = view.findViewById(R.id.qa_button);
+        mCourse = view.findViewById(R.id.qa_course);
+        mCourse.setItem(Arrays.asList(GlobVar.SUBJECTS));
+        mSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String question = mQuestion.getText().toString();
+                if (question.isEmpty()) return;
+                String course = mCourse.getSelectedItem();
+                mQuestion.setText("");
+                mLocalDataset.add(new QAMessage(QAMessage.USER, course, question));
+                mAdapter.notifyItemInserted(mLocalDataset.size() - 1);
+                HttpUtils.getAnswer(course, question, mHandler);
+            }
+        });
+
+        mAdapter = new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+            class ViewHolder extends RecyclerView.ViewHolder {
+                private final TextView text;
+                ViewHolder(View view) {
+                    super(view);
+                    text = view.findViewById(R.id.qa_text);
+                }
+
+                TextView getText() {
+                    return text;
+                }
+            }
+
+            @Override
+            public int getItemViewType(int position) {
+                return mLocalDataset.get(position).from;
+            }
+
+            @NonNull
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                switch (viewType) {
+                    case QAMessage.USER : return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_qa_user_message, parent, false));
+                    case QAMessage.ROBOT : return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.card_qa_bot_message, parent, false));
+                }
+                return null;
+            }
+
+            @Override
+            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+                ViewHolder h = (ViewHolder) holder;
+                h.getText().setText(mLocalDataset.get(position).text);
+            }
+
+            @Override
+            public int getItemCount() {
+                return mLocalDataset.size();
+            }
+        };
+        mView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        mView.setAdapter(mAdapter);
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

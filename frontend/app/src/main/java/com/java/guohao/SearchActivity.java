@@ -65,9 +65,7 @@ public class SearchActivity extends AppCompatActivity {
                             mSearchHistory.size() > GlobVar.MAX_SEARCH_HISTORY ?
                             mSearchHistory.subList(0, GlobVar.MAX_SEARCH_HISTORY).toArray(new String[0]) :
                             mSearchHistory.toArray(new String[0])));
-
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            Helper.hideKeyboard(SearchActivity.this);
             mSearchFragment.setSearchInfoAndInit(mCourse, text.toString());
          }
 

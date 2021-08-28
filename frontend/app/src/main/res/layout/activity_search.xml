@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toTopOf="@id/search_activity_filter_layout"
         android:id="@+id/search_activity_search"
         android:transitionName="@string/search_bar"
-        app:maxSuggestionsCount="10" />
+        app:mt_maxSuggestionsCount="10" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

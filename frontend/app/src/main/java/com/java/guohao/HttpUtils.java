@@ -270,4 +270,16 @@ public class HttpUtils {
             e.printStackTrace();
         }
     }
+
+    // http://open.edukg.cn/opedukg/api/typeOpen/open/inputQuestion
+    public static void getAnswer(String course, String question, Handler handler) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("course", course);
+            data.put("inputQuestion", question);
+            sendData(data, "http://open.edukg.cn/opedukg/api/typeOpen/open/inputQuestion", "POST", handler);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

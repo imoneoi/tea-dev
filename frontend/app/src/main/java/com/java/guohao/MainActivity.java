@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
         mViewPager = findViewById(R.id.main_vp);
         mViewPager.setUserInputEnabled(false);
+        mViewPager.setOffscreenPageLimit(1);
         mBottomNav = findViewById(R.id.bottom_nav);
 
         mBottomNav.setOnItemSelectedListener(this);
