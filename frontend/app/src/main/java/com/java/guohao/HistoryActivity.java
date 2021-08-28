@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.appbar.MaterialToolbar;
 
@@ -90,6 +91,12 @@ public class HistoryActivity extends AppCompatActivity {
         MaterialToolbar mTopBar = findViewById(R.id.history_top_bar);
         mTopBar.setTitle("浏览历史");
         mTopBar.setNavigationOnClickListener(v -> HistoryActivity.this.finish());
+
+        SwipeRefreshLayout mRefresh = findViewById(R.id.history_refresh);
+        mRefresh.setOnRefreshListener(() -> {
+            mAdapter.notifyItemRangeChanged(0, historyList.size());
+            mRefresh.setRefreshing(false);
+        });
 
         RecyclerView mView = findViewById(R.id.history_view);
         mView.setLayoutManager(new LinearLayoutManager(this));
