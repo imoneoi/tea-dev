@@ -3,6 +3,12 @@ package com.java.guohao;
 import java.util.HashMap;
 
 public class GlobVar {
+    // weibo
+    public static final String APP_KY = "3464419790";
+    public static final String REDIRECT_URL = "https://api.weibo.com/oauth2/default.html";
+    public static final String SCOPE = "";
+    public static final String APP_URL = "https://www.cnblogs.com/thkkk/"; // to download this app
+
     public static final int MAX_SEARCH_HISTORY = 10;
     public static final int CONNECTION_TIMEOUT = 5000;
     public static final int SUCCESS_FROM_INTERNET = 0;

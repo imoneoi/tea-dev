@@ -3,6 +3,10 @@
     package="com.java.guohao">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MyApplication"
@@ -14,18 +18,25 @@
         android:theme="@style/Theme.EDUKGfrontend"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ShareActivity"
+            android:exported="true" />
+        <activity
             android:name=".SearchActivity"
             android:exported="true" />
         <activity
             android:name=".EntityInfoActivity"
             android:exported="true" />
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".LoginActivity"
             android:exported="true" />
-        <activity android:name=".RegisterActivity"
+        <activity
+            android:name=".RegisterActivity"
             android:exported="true" />
-        <activity android:name=".FavActivity"
+        <activity
+            android:name=".FavActivity"
             android:exported="true" />
-        <activity android:name=".HistoryActivity"
+        <activity
+            android:name=".HistoryActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +72,11 @@ public class EntityInfoFragment extends Fragment {
             this.predicate = predicate;
             this.predicateLabel = predicateLabel;
             this.object = object;
+        }
+
+        @Override
+        public String toString() {
+            return predicateLabel + ": " + object;
         }
     }
 
@@ -168,5 +174,11 @@ public class EntityInfoFragment extends Fragment {
     // get data from Internet
     private void onRefresh() {
         HttpUtils.getEntityInfo(mCourse, mLabel, mHandler);
+    }
+
+    public String getAbstract() {
+        ArrayList<String> arr = new ArrayList<>();
+        mLocalDataset.forEach(r -> arr.add(r.toString()));
+        return TextUtils.join("\n", arr);
     }
 }

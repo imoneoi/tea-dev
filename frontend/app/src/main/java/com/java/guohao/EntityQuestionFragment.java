@@ -1,6 +1,5 @@
 package com.java.guohao;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,7 +21,6 @@ import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import org.json.JSONArray;
@@ -32,7 +30,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class EntityQuestionFragment extends Fragment {
     private static class SafeHandler extends Handler {
@@ -88,6 +85,10 @@ public class EntityQuestionFragment extends Fragment {
             choices = new ArrayList<>();
             myAnswer = UNANSWERED;
         }
+
+        public String answerStr() {
+            return TextUtils.join("\n", choices);
+        }
     }
 
     private static HashMap<String, String> mChoiceMap;
@@ -113,17 +114,20 @@ public class EntityQuestionFragment extends Fragment {
     CircularProgressIndicator mLoading;
     Button mPrev;
     Button mNext;
+    Button mShare;
     SwitchMaterial mIsShowAnswer;
     RecyclerView.Adapter<ViewHolder> mAdapter;
+    WbShareInterface mShareInterface;
 
     public EntityQuestionFragment() {
-        this("", "", "");
+        this("", "", "", null);
     }
 
-    public EntityQuestionFragment(String label, String course, String uri) {
+    public EntityQuestionFragment(String label, String course, String uri, WbShareInterface shareInterface) {
         mLabel = label;
         mCourse = course;
         mUri = uri;
+        mShareInterface = shareInterface;
         currentQuestion = 0;
         mLocalDataset = new Question();
         mAllDataset = new ArrayList<>();
@@ -145,8 +149,22 @@ public class EntityQuestionFragment extends Fragment {
         mNum = view.findViewById(R.id.entity_question_num);
         mPrev = view.findViewById(R.id.entity_question_prev);
         mNext = view.findViewById(R.id.entity_question_next);
+        mShare = view.findViewById(R.id.entity_question_share);
         mPrev.setOnClickListener(v -> setCurrentQuestion(currentQuestion - 1));
         mNext.setOnClickListener(v -> setCurrentQuestion(currentQuestion + 1));
+        mShare.setOnClickListener(v -> {
+            String wbContent = "";
+            if (mLocalDataset.myAnswer == mLocalDataset.answer) {
+                wbContent = "这道题我做对了，相信你也能做对！"; // I'm right
+            } else if (mLocalDataset.myAnswer != Question.UNANSWERED) {
+                wbContent = "这道题我做错了，看看你会不会？"; // I'm wrong
+            } else if (mIsShowAnswer.isChecked()) {
+                wbContent = "这道题我看了答案才会，看看你能不能直接做出来？";
+            } else {
+                wbContent = "这道题我还没做，一起来看看吧！";
+            }
+            share(wbContent, mLocalDataset.question, mLocalDataset.answerStr());
+        });
 
 
         mView = view.findViewById(R.id.entity_question_choice_view);
@@ -273,5 +291,11 @@ public class EntityQuestionFragment extends Fragment {
     // get data from Internet
     private void onRefresh() {
         HttpUtils.getQuestion(mCourse, mLabel, mHandler);
+    }
+
+    private void share(String wbContent, String title, String content) {
+        if (mShareInterface != null) {
+            mShareInterface.share(wbContent, title, content);
+        }
     }
 }

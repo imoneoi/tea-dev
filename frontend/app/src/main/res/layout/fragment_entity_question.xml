@@ -38,53 +38,84 @@
         app:layout_constraintTop_toBottomOf="@id/entity_question_choice_view"
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/entity_question_bottom_view">
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:layout_width="0dp"
-            android:layout_marginStart="12dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/entity_question_show_answer"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/entity_question_bottom_bottom"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/entity_question_num"
-            android:text="显示答案" />
-        <TextView
-            android:id="@+id/entity_question_num"
-            app:layout_constraintLeft_toRightOf="@id/entity_question_show_answer"
-            app:layout_constraintRight_toLeftOf="@id/entity_question_prev"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/entity_question_bottom_top">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/entity_question_share">
+                <TextView
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:flow_verticalAlign="center"
+                    app:flow_horizontalAlign="center"
+                    android:id="@+id/entity_question_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="0/0" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                app:layout_constraintRight_toRightOf="parent"
+                android:id="@+id/entity_question_share"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="分享题目"
+                app:icon="@drawable/share"
+                app:iconSize="12dp"
+                android:layout_marginEnd="16dp"
+                tools:layout_editor_absoluteY="0dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/entity_question_bottom_top"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:flow_verticalAlign="center"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp" />
+            android:id="@+id/entity_question_bottom_bottom">
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:layout_width="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_height="match_parent"
+                android:id="@+id/entity_question_show_answer"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:text="显示答案" />
+            <LinearLayout
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginEnd="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <Button
+                    android:id="@+id/entity_question_prev"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="上一题"
+                    app:icon="@drawable/ic_baseline_arrow_back_ios_24"
+                    app:iconSize="12dp"
+                    tools:layout_editor_absoluteY="0dp" />
 
-        <Button
-            android:id="@+id/entity_question_prev"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="上一题"
-            app:icon="@drawable/ic_baseline_arrow_back_ios_24"
-            app:iconSize="12dp"
-            app:layout_constraintLeft_toRightOf="@id/entity_question_num"
-            app:layout_constraintRight_toLeftOf="@id/entity_question_next"
-            tools:layout_editor_absoluteY="0dp" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:id="@+id/entity_question_next"
-            android:text="下一题"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="12dp"
-            app:icon="@drawable/ic_baseline_arrow_forward_ios_24"
-            app:iconGravity="end"
-            app:iconSize="12dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/entity_question_prev" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:id="@+id/entity_question_next"
+                    android:text="下一题"
+                    android:layout_marginStart="8dp"
+                    app:icon="@drawable/ic_baseline_arrow_forward_ios_24"
+                    app:iconGravity="end"
+                    app:iconSize="12dp" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
