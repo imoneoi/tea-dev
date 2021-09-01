@@ -18,7 +18,7 @@ def crawl(from_char: int, to_char: int):
                 "searchKey": search_char
             })
             res = requests.post("http://47.102.217.32:19741/api/proc", json={
-                "session": "79020baf-88bc-4c3b-8fc1-702eaf6b7c56",
+                "key": "teadevkey0",
                 "url": "http://open.edukg.cn/opedukg/api/typeOpen/open/instanceList",
                 "method" : "GET",
                 "data": data
