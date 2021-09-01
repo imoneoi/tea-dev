@@ -64,10 +64,12 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             mPosOfId.put(mIdOfPos[i], i);
         }
 
+        HttpUtils.user.setContext(this);
         if (Storage.contains(this, mSessionStorageKey)) {
             HttpUtils.user.session = Storage.load(this, mSessionStorageKey);
             HttpUtils.user.getUserData();
             HttpUtils.user.username = Storage.load(this, mUsernameStorageKey);
+            HttpUtils.user.loadLocalData();
         }
 
         mViewPager = findViewById(R.id.main_vp);
