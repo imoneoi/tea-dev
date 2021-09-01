@@ -27,19 +27,28 @@ public class SearchFragment extends BasicListFragment implements SwipeRefreshLay
             }
         }
     }
+    protected String mSearchKeyword;
 
     private SafeHandler mHandler = new SafeHandler(this);
 
     public SearchFragment() {
-        this("", "", null);
+        this(null, "", "");
     }
 
     public SearchFragment(String course, String searchKeyword) {
-        this(course, searchKeyword, null);
+        this(null, course, searchKeyword);
     }
 
-    public SearchFragment(String course, String searchKeyword, SearchActivity parent) {
-        super(course, searchKeyword, parent);
+    public SearchFragment(SearchActivity parent, String course, String searchKeyword) {
+        super(parent, course, searchKeyword);
+        this.mSearchKeyword = searchKeyword;
+    }
+
+    public void setSearchInfoAndInit(String course, String searchKeyword) {
+        mCourse = course;
+        mSearchKeyword = searchKeyword;
+        updateStorageKey(searchKeyword);
+        initData();
     }
 
     @Override

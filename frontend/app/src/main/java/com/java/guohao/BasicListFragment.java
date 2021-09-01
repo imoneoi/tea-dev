@@ -106,7 +106,6 @@ public abstract class BasicListFragment extends Fragment implements SwipeRefresh
     protected ArrayList<EntitySearchResult> mLocalDataset;
     protected EntitySearchResultFilter mFilter;
     protected String mCourse;
-    protected String mSearchKeyword;
     protected String mStorageKey;
     protected RecyclerView mView;
     protected RecyclerView.Adapter<ViewHolder> mAdapter;
@@ -114,21 +113,25 @@ public abstract class BasicListFragment extends Fragment implements SwipeRefresh
     protected SearchActivity mParent;
 
     public BasicListFragment() {
-        this("", "", null);
+        this(null, "");
     }
 
-    public BasicListFragment(String course, String searchKeyword) {
-        this(course, searchKeyword, null);
+    public BasicListFragment(String course) {
+        this(null, course);
     }
 
-    public BasicListFragment(String course, String searchKeyword, SearchActivity parent) {
+    public BasicListFragment(SearchActivity parent, String course, String... args) {
         mParent = parent;
         mCourse = course;
-        mSearchKeyword = searchKeyword;
-        mStorageKey = Storage.getKey(this.getClass().getSimpleName(), mCourse, mSearchKeyword);
+        updateStorageKey(args);
         mLocalDataset = new ArrayList<>();
         mOriginalDataset = new ArrayList<>();
         mFilter = new EntitySearchResultFilter();
+    }
+
+    void updateStorageKey(String... args) {
+        String otherArg = Storage.getKey(args);
+        mStorageKey = Storage.getKey(this.getClass().getSimpleName(), mCourse, otherArg);
     }
 
     @Override
@@ -198,6 +201,7 @@ public abstract class BasicListFragment extends Fragment implements SwipeRefresh
             }
         };
         mView.setAdapter(mAdapter);
+        initData();
         return view;
     }
 
@@ -226,13 +230,6 @@ public abstract class BasicListFragment extends Fragment implements SwipeRefresh
 
     public EntitySearchResultFilter getFilter() {
         return mFilter;
-    }
-
-    public void setSearchInfoAndInit(String course, String searchKeyword) {
-        mCourse = course;
-        mSearchKeyword = searchKeyword;
-        mStorageKey = Storage.getKey(this.getClass().getSimpleName(), mCourse, mSearchKeyword);
-        initData();
     }
 
     public void initData() {

@@ -181,7 +181,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        mSearchFragment = new SearchFragment("", "", this);
+        mSearchFragment = new SearchFragment(this, "", "");
         getSupportFragmentManager().beginTransaction().replace(R.id.search_activity_view, mSearchFragment).commit();
 
         RecyclerView mCategoryView = layout.findViewById(R.id.search_filter_category_view);

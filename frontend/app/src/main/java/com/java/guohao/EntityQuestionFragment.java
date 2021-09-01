@@ -108,9 +108,11 @@ public class EntityQuestionFragment extends Fragment {
     private Question mLocalDataset;
     private ArrayList<Question> mAllDataset;
     private Integer currentQuestion;
+    private Double score;
     RecyclerView mView;
     TextView mQuestion;
     TextView mNum;
+    TextView mScore;
     CircularProgressIndicator mLoading;
     Button mPrev;
     Button mNext;
@@ -129,6 +131,7 @@ public class EntityQuestionFragment extends Fragment {
         mUri = uri;
         mShareInterface = shareInterface;
         currentQuestion = 0;
+        score = 0.0;
         mLocalDataset = new Question();
         mAllDataset = new ArrayList<>();
         mStorageKey = Storage.getKey(this.getClass().getSimpleName(), label, course);
@@ -143,10 +146,10 @@ public class EntityQuestionFragment extends Fragment {
         mQuestion = view.findViewById(R.id.entity_question_question);
         mIsShowAnswer = view.findViewById(R.id.entity_question_show_answer);
         mIsShowAnswer.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            mAdapter.notifyItemRangeRemoved(0, mLocalDataset.choices.size());
-            mAdapter.notifyItemRangeInserted(0, mLocalDataset.choices.size());
+            mAdapter.notifyItemRangeChanged(0, mLocalDataset.choices.size());
         });
         mNum = view.findViewById(R.id.entity_question_num);
+        mScore = view.findViewById(R.id.entity_question_score);
         mPrev = view.findViewById(R.id.entity_question_prev);
         mNext = view.findViewById(R.id.entity_question_next);
         mShare = view.findViewById(R.id.entity_question_share);
@@ -188,8 +191,8 @@ public class EntityQuestionFragment extends Fragment {
                         // correct
                         if (mLocalDataset.myAnswer == Question.UNANSWERED) {
                             mLocalDataset.myAnswer = h.getBindingAdapterPosition();
-                            mAdapter.notifyItemRangeRemoved(0, mLocalDataset.choices.size());
-                            mAdapter.notifyItemRangeInserted(0, mLocalDataset.choices.size());
+                            mAdapter.notifyItemRangeChanged(0, mLocalDataset.choices.size());
+                            updateScore(); // naive
                         }
                     }
                 });
@@ -221,7 +224,8 @@ public class EntityQuestionFragment extends Fragment {
             }
         };
         mView.setAdapter(mAdapter);
-        ((SimpleItemAnimator) mView.getItemAnimator()).setSupportsChangeAnimations(false);
+        mView.setItemAnimator(null);
+        // ((SimpleItemAnimator) mView.getItemAnimator()).setSupportsChangeAnimations(false);
         initData();
         return view;
     }
@@ -297,5 +301,13 @@ public class EntityQuestionFragment extends Fragment {
         if (mShareInterface != null) {
             mShareInterface.share(wbContent, title, content);
         }
+    }
+
+    private void updateScore() {
+        double perScore = 100.0 / mAllDataset.size();
+        if (mLocalDataset.myAnswer.equals(mLocalDataset.answer)) {
+            score += perScore;
+        }
+        mScore.setText(String.format("分数: %.1f/100", score));
     }
 }
