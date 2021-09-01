@@ -1,14 +1,12 @@
 package com.java.guohao;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.ArrayMap;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -226,6 +224,7 @@ public class HttpUtils {
 
     }
 
+    @SuppressLint("StaticFieldLeak")
     public static User user = new User();
 
     public static void sendData(JSONObject data, String url, String method, Handler handler) {
