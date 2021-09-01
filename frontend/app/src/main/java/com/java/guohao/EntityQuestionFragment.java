@@ -146,7 +146,11 @@ public class EntityQuestionFragment extends Fragment {
         mQuestion = view.findViewById(R.id.entity_question_question);
         mIsShowAnswer = view.findViewById(R.id.entity_question_show_answer);
         mIsShowAnswer.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            mAdapter.notifyItemRangeChanged(0, mLocalDataset.choices.size());
+            if (mLocalDataset.myAnswer != Question.UNANSWERED &&
+                    mLocalDataset.answer != mLocalDataset.myAnswer) {
+                mAdapter.notifyItemChanged(mLocalDataset.myAnswer);
+            }
+            mAdapter.notifyItemChanged(mLocalDataset.answer);
         });
         mNum = view.findViewById(R.id.entity_question_num);
         mScore = view.findViewById(R.id.entity_question_score);
@@ -191,8 +195,8 @@ public class EntityQuestionFragment extends Fragment {
                         // correct
                         if (mLocalDataset.myAnswer == Question.UNANSWERED) {
                             mLocalDataset.myAnswer = h.getBindingAdapterPosition();
-                            mAdapter.notifyItemRangeChanged(0, mLocalDataset.choices.size());
                             updateScore(); // naive
+                            mAdapter.notifyDataSetChanged();
                         }
                     }
                 });

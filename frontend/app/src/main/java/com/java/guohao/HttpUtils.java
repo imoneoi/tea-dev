@@ -1,5 +1,6 @@
 package com.java.guohao;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -45,6 +46,7 @@ public class HttpUtils {
         String session, username;
         ArrayMap<CourseLabel, Long> favorite; // label and timestamp
         ArrayMap<CourseLabel, Long> history; // label and timestamp
+        Context context;
 
         /* code of user-related operations */
         final static int REGISTER = 0;
@@ -70,12 +72,14 @@ public class HttpUtils {
         }
 
         SafeHandler mHandler = new SafeHandler(this);
-        String mSearchKey;
 
         User() {
             favorite = new ArrayMap<>();
             history = new ArrayMap<>();
-            mSearchKey = Storage.getKey(this.getClass().getSimpleName(), session);
+        }
+
+        public void setContext(Context context) {
+            this.context = context;
         }
 
         public void setFavourite(CourseLabel courseLabel, boolean isFavourite) {
@@ -111,18 +115,27 @@ public class HttpUtils {
             try {
                 JSONObject obj = new JSONObject(data);
                 JSONArray favourite_arr = obj.getJSONArray("favourite");
+                favorite.clear();
                 for (int i = 0; i < favourite_arr.length(); ++i) {
                     JSONObject o = favourite_arr.getJSONObject(i);
                     favorite.put(new CourseLabel(o.getString("course"), o.getString("label")), o.getLong("time"));
                 }
 
                 JSONArray history_arr = obj.getJSONArray("history");
+                history.clear();
                 for (int i = 0; i < history_arr.length(); ++i) {
                     JSONObject o = history_arr.getJSONObject(i);
                     history.put(new CourseLabel(o.getString("course"), o.getString("label")), o.getLong("time"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+
+        public void loadLocalData() {
+            String key = Storage.getKey(this.getClass().getSimpleName(), username);
+            if (Storage.contains(context, key)) {
+                decodeData(Storage.load(context, key));
             }
         }
 
@@ -161,7 +174,9 @@ public class HttpUtils {
         }
 
         public void updateUserData() {
-            __setUserData(encodeData());
+            String data = encodeData();
+            Storage.save(context, Storage.getKey(this.getClass().getSimpleName(), username), data);
+            __setUserData(data);
         }
 
         private void __setUserData(String data) {
