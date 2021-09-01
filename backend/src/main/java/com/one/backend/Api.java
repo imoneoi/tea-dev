@@ -12,8 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -25,16 +32,36 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 public class Api {
-    final private ConcurrentHashMap<String, UserData> users = new ConcurrentHashMap<>();  // user name --> data
-    final private ConcurrentHashMap<String, String> sessions = new ConcurrentHashMap<>(); // session --> user name
+    private ConcurrentHashMap<String, UserData> users = new ConcurrentHashMap<>();  // user name --> data
+    private ConcurrentHashMap<String, String> sessions = new ConcurrentHashMap<>(); // session --> user name
+    final private String userFile = "user.bin";
+    final private String sessionFile = "session.bin";
 
     // data synchronization
     public void sync_write_user(String username) {
-
+        try {
+            ObjectOutputStream userOf = new ObjectOutputStream(new FileOutputStream(userFile));
+            userOf.writeObject(users);
+            userOf.close();
+            ObjectOutputStream sessionOf = new ObjectOutputStream(new FileOutputStream(sessionFile));
+            sessionOf.writeObject(users);
+            sessionOf.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void sync_load_all() {
-
+        try {
+            ObjectInputStream userIf = new ObjectInputStream(new FileInputStream(userFile));
+            users = (ConcurrentHashMap<String, UserData>) userIf.readObject();
+            userIf.close();
+            ObjectInputStream sessionIf = new ObjectInputStream(new FileInputStream(sessionFile));
+            sessions = (ConcurrentHashMap<String, String>) sessionIf.readObject();
+            sessionIf.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // on load sync
