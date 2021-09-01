@@ -10,6 +10,7 @@ import uuid
 
 # Create your views here.
 EDUKG_ID = ""
+API_KEY = "teadevkey0"
 
 HEADERS = {
     "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
@@ -100,7 +101,7 @@ def __login():
     global EDUKG_ID
     url = "http://open.edukg.cn/opedukg/api/typeAuth/user/login"
     data = {
-        "phone": 15049957199,
+        "phone": 15538088958,
         "password": "Vg0jhog4SG461VhXx7Zq"
     }
     res = requests.post(url, data=parse.urlencode(data), headers=HEADERS)
@@ -120,12 +121,13 @@ def __get_res(url, method, data):
 def proc(request):
     global EDUKG_ID
     post_json = json.loads(request.body)
-    sess = post_json.get("session", "")
+    key = post_json.get("key", "")
     url = post_json.get("url", "")
     method = post_json.get("method", "")
     data = json.loads(post_json.get("data", ""))
-    db_user = get_user_by_sess(sess)
-    if db_user and url and method:
+    print(key, url, method)
+    if key == API_KEY and url and method:
+        print("ok", data)
         json_res = __get_res(url, method, data)
         if json_res.get("code", "-1") == "-1":
             __login()

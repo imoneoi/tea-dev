@@ -216,7 +216,7 @@ public class HttpUtils {
     public static void sendData(JSONObject data, String url, String method, Handler handler) {
         try {
             JSONObject params = new JSONObject();
-            params.put("session", user.session);
+            params.put("key", GlobVar.API_KEY);
             params.put("url", url);
             params.put("method", method);
             params.put("data", data.toString());

@@ -231,7 +231,7 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-    public void onSearchFragmentUpdate() {
+    public void onBasicListFragmentUpdate() {
         findViewById(R.id.search_activity_filter_layout).setVisibility(View.VISIBLE);
         mLabelAdapter.notifyDataSetChanged();
         mCategoryAdapter.notifyDataSetChanged();
