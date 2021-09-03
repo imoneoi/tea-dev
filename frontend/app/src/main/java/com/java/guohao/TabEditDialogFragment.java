@@ -1,31 +1,25 @@
 package com.java.guohao;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.chip.Chip;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 public class TabEditDialogFragment extends DialogFragment {
 
@@ -41,7 +35,7 @@ public class TabEditDialogFragment extends DialogFragment {
 
         public ViewHolder(View view) {
             super(view);
-            mChip = (Chip) view.findViewById(R.id.tab_edit_chip);
+            mChip = view.findViewById(R.id.tab_edit_chip);
         }
 
         Chip getChip() {
@@ -73,23 +67,20 @@ public class TabEditDialogFragment extends DialogFragment {
             ViewHolder h = new ViewHolder(view);
 
             Chip c = view.findViewById(R.id.tab_edit_chip);
-            c.setChipIcon(ContextCompat.getDrawable(getContext(), mDrawableId));
+            c.setChipIcon(ContextCompat.getDrawable(requireContext(), mDrawableId));
             return h;
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.getChip().setText(mLocalDataset.get(position));
-            holder.getChip().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Chip c = v.findViewById(R.id.tab_edit_chip);
-                    int x = mLocalDataset.indexOf(c.getText().toString());
-                    mLocalDataset.remove(x);
-                    notifyItemRemoved(x);
-                    mOppositeDataset.add(c.getText().toString());
-                    mOppositeAdapter.notifyItemInserted(mOppositeDataset.size() - 1);
-                }
+            holder.getChip().setOnClickListener(v -> {
+                Chip c = v.findViewById(R.id.tab_edit_chip);
+                int x = mLocalDataset.indexOf(c.getText().toString());
+                mLocalDataset.remove(x);
+                notifyItemRemoved(x);
+                mOppositeDataset.add(c.getText().toString());
+                mOppositeAdapter.notifyItemInserted(mOppositeDataset.size() - 1);
             });
         }
 
@@ -137,9 +128,10 @@ public class TabEditDialogFragment extends DialogFragment {
         mOutTitles = new ArrayList<>();
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.fragment_tab_edit_dialog, null);
         mInView = v.findViewById(R.id.tab_edit_in_view);
@@ -160,15 +152,8 @@ public class TabEditDialogFragment extends DialogFragment {
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(v)
                 // Add action buttons
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        mParent.onDialogPositiveClick(TabEditDialogFragment.this);
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) { }
-                });
+                .setPositiveButton(R.string.confirm, (dialog, id) -> mParent.onDialogPositiveClick(TabEditDialogFragment.this))
+                .setNegativeButton(R.string.cancel, (dialog, id) -> { });
         return builder.create();
     }
 

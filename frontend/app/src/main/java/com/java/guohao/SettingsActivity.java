@@ -1,10 +1,7 @@
 package com.java.guohao;
 
-import android.app.Application;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Process;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +21,6 @@ import java.util.Arrays;
 public class SettingsActivity extends AppCompatActivity {
 
     public static final int SETTINGS_CHANGED = 1;
-    public static final int SETTINGS_UNCHANGED = 0;
 
     private final String[] settings_text = {"跟随系统", "深色模式"};
     private final boolean[] checked = new boolean[settings_text.length];

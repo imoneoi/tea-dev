@@ -1,13 +1,7 @@
 package com.java.guohao;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
-
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -18,6 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
@@ -147,7 +146,7 @@ public class EntityQuestionFragment extends Fragment {
         mIsShowAnswer = view.findViewById(R.id.entity_question_show_answer);
         mIsShowAnswer.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (mLocalDataset.myAnswer != Question.UNANSWERED &&
-                    mLocalDataset.answer != mLocalDataset.myAnswer) {
+                    !mLocalDataset.answer.equals(mLocalDataset.myAnswer)) {
                 mAdapter.notifyItemChanged(mLocalDataset.myAnswer);
             }
             mAdapter.notifyItemChanged(mLocalDataset.answer);
@@ -160,8 +159,8 @@ public class EntityQuestionFragment extends Fragment {
         mPrev.setOnClickListener(v -> setCurrentQuestion(currentQuestion - 1));
         mNext.setOnClickListener(v -> setCurrentQuestion(currentQuestion + 1));
         mShare.setOnClickListener(v -> {
-            String wbContent = "";
-            if (mLocalDataset.myAnswer == mLocalDataset.answer) {
+            String wbContent;
+            if (mLocalDataset.myAnswer.equals(mLocalDataset.answer)) {
                 wbContent = "这道题我做对了，相信你也能做对！"; // I'm right
             } else if (mLocalDataset.myAnswer != Question.UNANSWERED) {
                 wbContent = "这道题我做错了，看看你会不会？"; // I'm wrong
@@ -180,24 +179,22 @@ public class EntityQuestionFragment extends Fragment {
 
             @Override
             public long getItemId(int position) {
-                return mLocalDataset.choices.get(position).toString().hashCode();
+                return mLocalDataset.choices.get(position).hashCode();
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @NonNull
             @Override
             public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(requireContext()).inflate(R.layout.card_entity_question_choice, parent, false);
                 ViewHolder h = new ViewHolder(view);
                 MaterialCardView c = h.getCard();
-                c.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // correct
-                        if (mLocalDataset.myAnswer == Question.UNANSWERED) {
-                            mLocalDataset.myAnswer = h.getBindingAdapterPosition();
-                            updateScore(); // naive
-                            mAdapter.notifyDataSetChanged();
-                        }
+                c.setOnClickListener(v -> {
+                    // correct
+                    if (mLocalDataset.myAnswer == Question.UNANSWERED) {
+                        mLocalDataset.myAnswer = h.getBindingAdapterPosition();
+                        updateScore(); // naive
+                        mAdapter.notifyDataSetChanged();
                     }
                 });
                 return h;
@@ -283,6 +280,7 @@ public class EntityQuestionFragment extends Fragment {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private void setCurrentQuestion(int index) {
         if (index < 0 || index >= mAllDataset.size()) {
             return;
@@ -307,6 +305,7 @@ public class EntityQuestionFragment extends Fragment {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private void updateScore() {
         double perScore = 100.0 / mAllDataset.size();
         if (mLocalDataset.myAnswer.equals(mLocalDataset.answer)) {

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -91,6 +92,19 @@ public class HistoryActivity extends AppCompatActivity {
         MaterialToolbar mTopBar = findViewById(R.id.history_top_bar);
         mTopBar.setTitle("浏览历史");
         mTopBar.setNavigationOnClickListener(v -> HistoryActivity.this.finish());
+        mTopBar.setOnMenuItemClickListener(item -> {
+            (new MaterialAlertDialogBuilder(HistoryActivity.this))
+                    .setMessage("确认清空浏览历史？")
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        HttpUtils.user.history.clear();
+                        HttpUtils.user.updateUserData();
+                        mAdapter.notifyItemRangeRemoved(0, historyList.size());
+                        historyList.clear();
+                    })
+                    .setNegativeButton("取消", (dialog, which) -> {})
+                    .show();
+            return false;
+        });
 
         SwipeRefreshLayout mRefresh = findViewById(R.id.history_refresh);
         mRefresh.setOnRefreshListener(() -> {
