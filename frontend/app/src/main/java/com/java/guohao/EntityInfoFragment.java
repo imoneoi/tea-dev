@@ -163,7 +163,7 @@ public class EntityInfoFragment extends Fragment {
         mLoading.setVisibility(View.GONE);
     }
 
-    private void initData() {
+    public void initData() {
         if (Storage.contains(requireContext(), mStorageKey)) {
             parseData(Storage.load(requireContext(), mStorageKey));
         } else {

@@ -131,7 +131,6 @@ public class EntityRelationshipFragment extends Fragment {
             }
         };
         mView.setAdapter(mAdapter);
-
         initData();
         return view;
     }
