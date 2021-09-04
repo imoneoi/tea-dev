@@ -1,5 +1,6 @@
 package com.java.guohao;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -10,6 +11,7 @@ public class MainPagerAdapter extends FragmentStateAdapter {
         super(fa);
     }
 
+    @NonNull
     public Fragment createFragment(int pos) {
         switch (pos) {
             case 0 : return new MainFragment();

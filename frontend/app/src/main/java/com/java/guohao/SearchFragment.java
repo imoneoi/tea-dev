@@ -28,7 +28,7 @@ public class SearchFragment extends BasicListFragment implements SwipeRefreshLay
     }
     protected String mSearchKeyword;
 
-    private SafeHandler mHandler = new SafeHandler(this);
+    private final SafeHandler mHandler = new SafeHandler(this);
 
     public SearchFragment() {
         this(null, "", "");

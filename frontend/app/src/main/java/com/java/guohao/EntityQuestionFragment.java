@@ -33,8 +33,10 @@ import java.util.Map;
 public class EntityQuestionFragment extends Fragment {
     private static class SafeHandler extends Handler {
         private final WeakReference<Fragment> mParent;
-        public SafeHandler(Fragment parent) {
+        private int cur;
+        public SafeHandler(Fragment parent, int start) {
             mParent = new WeakReference<>(parent);
+            cur = start;
         }
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -43,7 +45,20 @@ public class EntityQuestionFragment extends Fragment {
             if (msg.what == GlobVar.SUCCESS_FROM_INTERNET) {
                 String data = msg.obj.toString();
                 parent.parseData(data);
-                Storage.save(parent.requireContext(), parent.mStorageKey, data);
+                Storage.save(parent.requireContext(), parent.mStorageKey[cur++], data);
+                if (cur == 1) {
+                    parent.mLoading.setVisibility(View.GONE);
+                    parent.setCurrentQuestion(0);
+                }
+                while (cur < parent.mUri.length && Storage.contains(parent.requireContext(), parent.mStorageKey[cur])) {
+                    ++cur;
+                }
+                if (cur < parent.mUri.length) {
+                    HttpUtils.getQuestion(parent.mCourse[cur], parent.mLabel[cur], parent.mHandler);
+                } else {
+                    parent.loadingAccomplished = true;
+                    parent.setCurrentQuestion(parent.currentQuestion);
+                }
             }
         }
     }
@@ -73,7 +88,7 @@ public class EntityQuestionFragment extends Fragment {
         }
     }
 
-    private class Question {
+    private static class Question {
         public static final int UNANSWERED = -1;
         public Integer id;
         public Integer answer;
@@ -83,6 +98,7 @@ public class EntityQuestionFragment extends Fragment {
         public Question() {
             choices = new ArrayList<>();
             myAnswer = UNANSWERED;
+            answer = 4;
         }
 
         public String answerStr() {
@@ -90,7 +106,7 @@ public class EntityQuestionFragment extends Fragment {
         }
     }
 
-    private static HashMap<String, String> mChoiceMap;
+    private static final HashMap<String, String> mChoiceMap;
     static {
         mChoiceMap = new HashMap<>();
         mChoiceMap.put("①", "A.");
@@ -99,15 +115,16 @@ public class EntityQuestionFragment extends Fragment {
         mChoiceMap.put("④", "D.");
     }
 
-    private SafeHandler mHandler = new SafeHandler(this);
-    private String mStorageKey;
-    private String mLabel;
-    private String mCourse;
-    private String mUri;
+    private SafeHandler mHandler;
+    private final String[] mStorageKey;
+    private final String[] mLabel;
+    private final String[] mCourse;
+    private final String[] mUri;
     private Question mLocalDataset;
     private ArrayList<Question> mAllDataset;
     private Integer currentQuestion;
     private Double score;
+    private boolean loadingAccomplished = false;
     RecyclerView mView;
     TextView mQuestion;
     TextView mNum;
@@ -124,29 +141,34 @@ public class EntityQuestionFragment extends Fragment {
         this("", "", "", null);
     }
 
-    public EntityQuestionFragment(String label, String course, String uri, WbShareInterface shareInterface) {
-        mLabel = label;
-        mCourse = course;
-        mUri = uri;
+    public EntityQuestionFragment(String[] label, String[] course, String[] uri, WbShareInterface shareInterface) {
+        mLabel = label.clone();
+        mCourse = course.clone();
+        mUri = uri.clone();
+        mStorageKey = new String[mUri.length];
+        for (int i = 0; i < mUri.length; ++i) {
+            mStorageKey[i] = Storage.getKey(this.getClass().getSimpleName(), label[i], course[i]);
+        }
         mShareInterface = shareInterface;
         currentQuestion = 0;
         score = 0.0;
-        mLocalDataset = new Question();
-        mAllDataset = new ArrayList<>();
-        mStorageKey = Storage.getKey(this.getClass().getSimpleName(), label, course);
+    }
+
+    public EntityQuestionFragment(String label, String course, String uri, WbShareInterface shareInterface) {
+        this(new String[]{label}, new String[]{course}, new String[]{uri}, shareInterface);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        mLocalDataset = new Question();
+        mAllDataset = new ArrayList<>();
         View view = inflater.inflate(R.layout.fragment_entity_question, container, false);
         mLoading = view.findViewById(R.id.entity_question_loading);
         mQuestion = view.findViewById(R.id.entity_question_question);
         mIsShowAnswer = view.findViewById(R.id.entity_question_show_answer);
         mIsShowAnswer.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (mLocalDataset.myAnswer != Question.UNANSWERED &&
-                    !mLocalDataset.answer.equals(mLocalDataset.myAnswer)) {
+            if (mLocalDataset.myAnswer != Question.UNANSWERED && !mLocalDataset.answer.equals(mLocalDataset.myAnswer)) {
                 mAdapter.notifyItemChanged(mLocalDataset.myAnswer);
             }
             mAdapter.notifyItemChanged(mLocalDataset.answer);
@@ -172,11 +194,9 @@ public class EntityQuestionFragment extends Fragment {
             share(wbContent, mLocalDataset.question, mLocalDataset.answerStr());
         });
 
-
         mView = view.findViewById(R.id.entity_question_choice_view);
         mView.setLayoutManager(new LinearLayoutManager(requireContext()));
         mAdapter = new RecyclerView.Adapter<ViewHolder>() {
-
             @Override
             public long getItemId(int position) {
                 return mLocalDataset.choices.get(position).hashCode();
@@ -234,7 +254,6 @@ public class EntityQuestionFragment extends Fragment {
     private void parseData(String raw_data) {
         Log.i("EntityQuestionFragment", raw_data);
         try {
-            mAllDataset.clear();
             JSONArray data = new JSONObject(raw_data).getJSONArray("data");
             for (int i = 0; i < data.length(); ++i) {
                 Question q = new Question();
@@ -246,6 +265,7 @@ public class EntityQuestionFragment extends Fragment {
                 for (Map.Entry<String, String> e : mChoiceMap.entrySet()) {
                     answerStr = answerStr.replace(e.getKey(), e.getValue());
                 }
+                answerStr = answerStr.replace("答案", "");
                 if (!answerStr.equals(item.getString("qAnswer"))) {
                     for (Map.Entry<String, String> e : mChoiceMap.entrySet()) {
                         body = body.replace(e.getKey(), e.getValue());
@@ -265,22 +285,30 @@ public class EntityQuestionFragment extends Fragment {
                 }
                 mAllDataset.add(q);
             }
-            setCurrentQuestion(0);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mLoading.setVisibility(View.GONE);
     }
 
     private void initData() {
-        if (Storage.contains(requireContext(), mStorageKey)) {
-            parseData(Storage.load(requireContext(), mStorageKey));
+        int cur = 0;
+        for (; cur < mUri.length && Storage.contains(requireContext(), mStorageKey[cur]); ++cur) {
+            parseData(Storage.load(requireContext(), mStorageKey[cur]));
+            if (cur == 0) {
+                mLoading.setVisibility(View.GONE);
+                setCurrentQuestion(0);
+            }
+        }
+        if (cur < mUri.length) {
+            mHandler = new SafeHandler(this, cur);
+            HttpUtils.getQuestion(mCourse[cur], mLabel[cur], mHandler);
         } else {
-            onRefresh();
+            loadingAccomplished = true;
+            setCurrentQuestion(currentQuestion);
         }
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void setCurrentQuestion(int index) {
         if (index < 0 || index >= mAllDataset.size()) {
             return;
@@ -289,14 +317,13 @@ public class EntityQuestionFragment extends Fragment {
         currentQuestion = index;
         mAdapter.notifyItemRangeRemoved(0, mLocalDataset.choices.size());
         mLocalDataset = mAllDataset.get(index);
-        mNum.setText(String.format("%d/%d", index + 1, mAllDataset.size()));
+        if (loadingAccomplished) {
+            mNum.setText(String.format("%d/%d", index + 1, mAllDataset.size()));
+        } else {
+            mNum.setText(index + 1 + "/加载中");
+        }
         mQuestion.setText(mLocalDataset.question);
         mAdapter.notifyItemRangeInserted(0, mLocalDataset.choices.size());
-    }
-
-    // get data from Internet
-    private void onRefresh() {
-        HttpUtils.getQuestion(mCourse, mLabel, mHandler);
     }
 
     private void share(String wbContent, String title, String content) {

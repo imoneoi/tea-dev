@@ -57,7 +57,7 @@ public class QAFragment extends Fragment {
         }
     }
 
-    private SafeHandler mHandler = new SafeHandler(this);
+    private final SafeHandler mHandler = new SafeHandler(this);
     
     RecyclerView mView;
     EditText mQuestion;
