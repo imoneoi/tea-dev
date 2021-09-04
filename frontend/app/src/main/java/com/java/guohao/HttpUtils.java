@@ -299,4 +299,16 @@ public class HttpUtils {
             e.printStackTrace();
         }
     }
+
+    // http://open.edukg.cn/opedukg/api/typeOpen/open/linkInstance
+    public static void getLink(String course, String text, Handler handler) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("context", text);
+            data.put("course", course);
+            sendData(data, "http://open.edukg.cn/opedukg/api/typeOpen/open/linkInstance", "POST", handler);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
