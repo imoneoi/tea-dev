@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.lang.ref.WeakReference;

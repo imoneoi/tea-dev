@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public abstract class BasicListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -248,14 +249,15 @@ public abstract class BasicListFragment extends Fragment implements SwipeRefresh
         sortData(mCurOrder); // and notify
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void sortData(int order) {
         mCurOrder = order;
         switch (order) {
             case LABEL_ORDER : {
-                mLocalDataset.sort((o1, o2) -> o1.label.compareTo(o2.label));
+                mLocalDataset.sort(Comparator.comparing(o -> o.label));
                 break;
             } case CATEGORY_ORDER : {
-                mLocalDataset.sort((o1, o2) -> o1.category.compareTo(o2.category));
+                mLocalDataset.sort(Comparator.comparing(o -> o.category));
                 break;
             } case FAVOURITE_ORDER : {
                 mLocalDataset.sort((o1, o2) -> HttpUtils.user.isFavourite(new HttpUtils.CourseLabel(mCourse, o1.label)) ? -1 :

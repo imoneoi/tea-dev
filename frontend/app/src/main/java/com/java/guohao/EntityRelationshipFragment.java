@@ -1,5 +1,6 @@
 package com.java.guohao;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class EntityRelationshipFragment extends Fragment {
 
@@ -135,6 +137,7 @@ public class EntityRelationshipFragment extends Fragment {
         return view;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void parseData(String raw_data) {
         Log.i("EntityRelationshipFragment", raw_data);
         try {
@@ -149,7 +152,7 @@ public class EntityRelationshipFragment extends Fragment {
                 mLocalDataset.add(new Relationship(
                         item.getString("predicate"), value));
             }
-            mLocalDataset.sort((o1, o2) -> o1.predicate.compareTo(o2.predicate));
+            mLocalDataset.sort(Comparator.comparing(o -> o.predicate));
             mAdapter.notifyDataSetChanged();
         } catch (Exception e) {
             e.printStackTrace();

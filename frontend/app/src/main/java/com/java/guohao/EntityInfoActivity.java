@@ -1,5 +1,11 @@
 package com.java.guohao;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,22 +13,11 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
-
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.sina.weibo.sdk.api.ImageObject;
 import com.sina.weibo.sdk.api.TextObject;
 import com.sina.weibo.sdk.api.WebpageObject;
 import com.sina.weibo.sdk.api.WeiboMultiMessage;
@@ -31,8 +26,6 @@ import com.sina.weibo.sdk.common.UiError;
 import com.sina.weibo.sdk.openapi.IWBAPI;
 import com.sina.weibo.sdk.openapi.WBAPIFactory;
 import com.sina.weibo.sdk.share.WbShareCallback;
-
-import java.io.ByteArrayOutputStream;
 
 public class EntityInfoActivity extends AppCompatActivity implements WbShareCallback, WbShareInterface {
 

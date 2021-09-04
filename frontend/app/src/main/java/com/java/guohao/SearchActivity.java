@@ -1,13 +1,6 @@
 package com.java.guohao;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentContainerView;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,22 +8,24 @@ import android.text.TextWatcher;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class SearchActivity extends AppCompatActivity {
     private class SearchListener implements MaterialSearchBar.OnSearchActionListener {
@@ -117,17 +112,13 @@ public class SearchActivity extends AppCompatActivity {
                 chip.setText(val);
             }
             chip.setChecked(mLocalDataset.containsKey(val));
-            chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    System.out.println(isChecked);
-                    Chip chip = buttonView.findViewById(R.id.search_filter_chip);
-                    if (isChecked) {
-                        mLocalDataset.put(val, 1);
-                    }
-                    else {
-                        mLocalDataset.remove(val);
-                    }
+            chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                System.out.println(isChecked);
+                Chip chip1 = buttonView.findViewById(R.id.search_filter_chip);
+                if (isChecked) {
+                    mLocalDataset.put(val, 1);
+                } else {
+                    mLocalDataset.remove(val);
                 }
             });
         }
@@ -197,19 +188,14 @@ public class SearchActivity extends AppCompatActivity {
         mLabelView.setAdapter(mLabelAdapter);
 
         ImageButton filterButton = findViewById(R.id.search_activity_filter_button);
-        filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                layout.open();
-            }
-        });
+        filterButton.setOnClickListener(v -> layout.open());
 
         ArrayList<String> orders = new ArrayList<>();
         orders.add("实体名称");
         orders.add("实体类别");
         orders.add("收藏优先");
         AutoCompleteTextView tv = findViewById(R.id.search_activity_sort_menu_item);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.one_line_list, orders);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.one_line_list, orders);
         tv.setAdapter(adapter);
         tv.setText(orders.get(0), false);
         tv.addTextChangedListener(new TextWatcher() {
@@ -231,6 +217,7 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void onBasicListFragmentUpdate() {
         findViewById(R.id.search_activity_filter_layout).setVisibility(View.VISIBLE);
         mLabelAdapter.notifyDataSetChanged();
