@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
 public class DiscoverFragment extends Fragment {
 
     private final String[] menu_text = {"实体链接", "专项测试", "知识梳理", "试题推荐"};
@@ -24,7 +26,7 @@ public class DiscoverFragment extends Fragment {
             R.drawable.ic_baseline_timeline_24,
             R.drawable.ic_baseline_apps_24
     };
-    private final Class[] next_page = {EntityLinkActivity.class, HistoryActivity.class, SettingsActivity.class, LoginActivity.class};
+    private final Class[] next_page = {EntityLinkActivity.class, null, null, null};
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView mText;
@@ -69,6 +71,10 @@ public class DiscoverFragment extends Fragment {
                 holder.getText().setText(menu_text[position]);
                 holder.getImage().setImageResource(icon_id[position]);
                 holder.getView().setOnClickListener(v -> {
+                    if (next_page[position] == null) {
+                        Snackbar.make(mView, "敬请期待", Snackbar.LENGTH_SHORT).setAnchorView(getActivity().findViewById(R.id.bottom_nav)).show();
+                        return;
+                    }
                     Intent intent = new Intent(v.getContext(), next_page[position]);
                     startActivityForResult(intent, position);
                 });
