@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EntityLinkActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/entity_link_top_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/entity_link_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/entity_link_top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="实体链接"
+            app:navigationIcon="@drawable/back"
+            style="@style/Widget.MaterialComponents.Toolbar.Surface"
+            />
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/entity_link_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/entity_link_top_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/entity_list_nav_graph" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/search_activity_drawer"
+    tools:context=".SearchActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <com.mancj.materialsearchbar.MaterialSearchBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/search_activity_filter_layout"
+        android:id="@+id/search_activity_search"
+        android:transitionName="@string/search_bar"
+        app:mt_maxSuggestionsCount="10" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_activity_filter_layout"
+            app:layout_constraintTop_toBottomOf="@id/search_activity_search"
+            app:layout_constraintBottom_toTopOf="@id/search_activity_view">
+        <ImageButton
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:src="@drawable/filter"
+            android:id="@+id/search_activity_filter_button" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/search_activity_sort_menu"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/search_activity_sort_menu_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/search_activity_view"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/search_activity_filter_layout"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/search_activity_filter_view"
+        android:fitsSystemWindows="true"
+        android:layout_gravity="start"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_filter_title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/search_filter_label_title"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:text="@string/search_filter_title" />
+        <TextView
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/search_filter_title"
+            app:layout_constraintBottom_toTopOf="@id/search_filter_label_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_filter_label_title"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:text="@string/search_filter_label_title"/>
+        <androidx.recyclerview.widget.RecyclerView
+            app:layout_constraintTop_toBottomOf="@id/search_filter_label_title"
+            app:layout_constraintBottom_toTopOf="@id/search_filter_category_title"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/search_filter_label_view"/>
+
+        <TextView
+            android:id="@+id/search_filter_category_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:text="@string/search_filter_category_title"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:layout_constraintBottom_toTopOf="@id/search_filter_category_view"
+            app:layout_constraintTop_toBottomOf="@id/search_filter_label_view" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            app:layout_constraintTop_toBottomOf="@id/search_filter_category_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:id="@+id/search_filter_category_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.navigation.NavigationView>
+</androidx.drawerlayout.widget.DrawerLayout>

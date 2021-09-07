@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="blue_700">#1976D2</color>
+    <color name="default_blue">#6200EE</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="orange">#FF7F00</color>
+    <color name="default_grey">#757575</color>
+    <color name="light_grey">#F0F0F0</color>
+    <color name="right">#61D800</color>
+    <color name="wrong">#F47100</color>
+
+    <color name="user_avatar">@color/default_blue</color>
+    <color name="user_text">@color/default_blue</color>
+    <color name="bot_text">#03DAC6</color>
+    <color name="bot_avatar">#000000</color>
+    <color name="send_button_bg">@color/default_blue</color>
+    <color name="send_button_fg">@color/white</color>
+    <color name="spinner_arrow">@color/black</color>
+    <color name="spinner_bg">@color/white</color>
+    <color name="spinner_text">@color/black</color>
+    <color name="spinner_border">@color/white</color>
+
+    <color name="searchBarIconColor">#3a3a3a</color>
+    //Base
+    <color name="searchBarPrimaryColor">#FFFFFF</color>
+    <color name="searchBarCursorColor">#8000a1ff</color>
+    <color name="searchBarDividerColor">#1F000000</color>
+
+    //Icons
+    <color name="searchBarNavIconTintColor">@color/searchBarIconColor</color>
+    <color name="searchBarMenuIconTintColor">@color/searchBarIconColor</color>
+    <color name="searchBarSearchIconTintColor">@color/searchBarIconColor</color>
+    <color name="searchBarClearIconTintColor">@color/searchBarIconColor</color>
+    <color name="searchBarBackIconTintColor">@color/searchBarIconColor</color>
+
+    //Text
+    <color name="searchBarTextColor">#DE000000</color>
+    <color name="searchBarHintColor">#42000000</color>
+    <color name="searchBarPlaceholderColor">#8A000000</color>
+    <color name="searchBarTextHighlightColor">#8000a1ff</color>
+</resources>

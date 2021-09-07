@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp">
+
+    <TextView
+        android:id="@+id/register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="注册"
+        android:layout_marginBottom="40dp"
+        android:textAlignment="center"
+        style="?attr/textAppearanceHeadline3"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@id/register_username"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/register_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="用户名"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:endIconMode="clear_text"
+        app:startIconDrawable="@drawable/me"
+        app:layout_constraintBottom_toTopOf="@id/register_password"
+        app:layout_constraintTop_toBottomOf="@id/register"
+        android:transitionName="username">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/register_username_text"
+            android:maxLines="1"
+            android:lines="1"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="12dp"
+        android:id="@+id/register_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="密码"
+        app:startIconDrawable="@drawable/password"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintBottom_toBottomOf="@id/repeat_password"
+        app:layout_constraintTop_toBottomOf="@id/register_username"
+        android:transitionName="password">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/register_password_text"
+            android:maxLines="1"
+            android:lines="1"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="12dp"
+        android:id="@+id/repeat_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="重复密码"
+        app:startIconDrawable="@drawable/password"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintBottom_toTopOf="@id/registerButton"
+        app:layout_constraintTop_toBottomOf="@id/register_password">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/register_repeat_password_text"
+            android:maxLines="1"
+            android:lines="1"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/registerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:theme="?attr/extendedFloatingActionButtonStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/repeat_password"
+        android:contentDescription="注册"
+        app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+        android:transitionName="button_go"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

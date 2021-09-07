@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    //Base
+    <color name="user_avatar">@color/default_blue</color>
+    <color name="user_text">#2C2C2C</color>
+    <color name="bot_text">#2C2C2C</color>
+    <color name="bot_avatar">#000000</color>
+    <color name="send_button_bg">#000000</color>
+    <color name="send_button_fg">#22DDCC</color>
+    <color name="spinner_arrow">#A0A0A0</color>
+    <color name="spinner_bg">#121212</color>
+    <color name="spinner_text">#A0A0A0</color>
+    <color name="spinner_border">@color/black</color>
+
+    <color name="searchBarPrimaryColor">#303030</color>
+    <color name="searchBarDividerColor">#1FFFFFFF</color>
+
+    <color name="searchBarIconColor">#00a1ff</color>
+    //Icons
+    <color name="searchBarNavIconTintColor">@color/searchBarIconColor</color>
+    <color name="searchBarMenuIconTintColor">@color/searchBarIconColor</color>
+    <color name="searchBarSearchIconTintColor">@color/searchBarIconColor</color>
+    <color name="searchBarClearIconTintColor">@color/searchBarIconColor</color>
+    <color name="searchBarBackIconTintColor">@color/searchBarIconColor</color>
+
+    //Text
+    <color name="searchBarTextColor">#DEFFFFFF</color>
+    <color name="searchBarHintColor">#42FFFFFF</color>
+    <color name="searchBarPlaceholderColor">#8AFFFFFF</color>
+    <color name="searchBarTextHighlightColor">#BF00a1ff</color>
+</resources>

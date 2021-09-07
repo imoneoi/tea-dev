@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/entity_link_layout"
+    tools:context=".EntityLinkSearchFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/entity_link_search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:hint="含有知识点的文本"
+            android:gravity="top"
+            android:id="@+id/entity_link_search_text"
+            android:lines="10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
+        android:id="@+id/entity_link_course"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/entity_link_search"
+        app:layout_constraintTop_toBottomOf="@id/entity_link_search_layout"
+        app:smsp_arrowColor="@color/spinner_arrow"
+        app:smsp_hint="学科"
+        app:smsp_itemColor="@color/spinner_text"
+        app:smsp_itemListBackgroundColor="@color/spinner_bg"
+        app:smsp_itemListColor="@color/spinner_text"
+        app:smsp_selectedItemListColor="@color/spinner_text"
+        app:smsp_underlineColor="@color/spinner_bg" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/entity_link_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/entity_link_course"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/entity_link_search_layout"
+        android:layout_marginTop="16dp"
+        app:icon="@drawable/search"
+        android:text="搜索" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/entity_link_result_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/entity_link_search"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:hint="搜索结果"
+            android:gravity="top"
+            android:id="@+id/entity_link_result"
+            android:lines="10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
